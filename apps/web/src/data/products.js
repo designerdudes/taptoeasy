@@ -1,0 +1,163 @@
+// Central product configuration for the 4 installation services.
+// variantId values come from the Hostinger Online Store (INR deposit products).
+
+export const PRODUCTS = [
+    {
+        slug: 'cloth-hangers',
+        name: 'Balcony Cloth Hangers',
+        tagline: 'Best Seller',
+        bestSeller: true,
+        deposit: 999,
+        variantId: 'variant_01M061FEZB9FEM8W9TVTWTRPWB',
+        icon: 'Wind',
+        accent: 'from-amber-500 to-orange-600',
+        hook: 'Installation Within 2 Hours in Hyderabad',
+        heroTitle: 'Rust-free balcony cloth hangers, fitted today.',
+        heroSub:
+            'SS-304 ceiling pulley & wall-mounted cloth drying hangers installed at your doorstep in Hyderabad. Pay a ₹999 deposit now, balance after fitting.',
+        benefits: [
+            { icon: 'ShieldCheck', title: 'SS-304 rust-free rails', text: 'Marine-grade stainless steel that survives Hyderabad monsoons without a spot of rust.' },
+            { icon: 'Wind', title: 'Self-locking nylon pulley', text: 'Two-finger pull to lower each rail; release anywhere and the lock holds.' },
+            { icon: 'Ruler', title: '12 kg per rail', text: '4, 6 or 8 independent rails — each rated for a full load of wet laundry.' },
+            { icon: 'Home', title: 'Fits 8–12 ft ceilings', text: 'Core-drilled anchors rated at 90 kg pull-out, safe for rented flats.' },
+        ],
+        whyChooseUs: [
+            { title: 'Our own crew, not contractors', text: 'Trained, uniformed fitters on our payroll — accountable for every install.' },
+            { title: 'Fixed price, no advance balance', text: 'You pay the deposit now and the rest only after the hanger is load-tested.' },
+            { title: 'Dust-sheet clean fitting', text: 'We lay sheets, core-drill, and carry away all debris. Walls and floor spotless.' },
+            { title: '5-year rail warranty', text: 'Registered on the spot. Any rail issue, we re-attend free for 5 years.' },
+        ],
+        testimonials: [
+            { name: 'Priya Sharma', location: 'Gachibowli', rating: 5, text: 'Booked in the morning, fitted by lunch. The pulley is so light my mother uses it with one hand.' },
+            { name: 'Ravi Kumar', location: 'Kukatpally', rating: 5, text: 'No rust after two monsoons. The crew left the balcony cleaner than they found it.' },
+            { name: 'Sneha Reddy', location: 'Madhapur', rating: 5, text: 'Fixed price, no haggling. Worth every rupee for a rented flat.' },
+        ],
+        faqs: [
+            { q: 'How long does cloth hanger installation take?', a: 'A standard ceiling pulley or wall-mounted hanger is fitted in about 2 hours — measurement, drilling, load test and handover included.' },
+            { q: 'Will the rails rust in Hyderabad monsoon?', a: 'No. The rails are SS-304 stainless steel and come with a 5-year rust-free rail warranty.' },
+            { q: 'Is it safe for rented flats?', a: 'Yes. We use core-drilled anchors with dust sheets and carry away all debris — walls and floors are left spotless and damage-free.' },
+            { q: 'What does the ₹999 deposit cover?', a: 'It secures your slot and the free measurement visit. The balance is payable only after the hanger is fitted and load-tested.' },
+        ],
+        stats: { customers: '6,400+', rating: '4.8', installs: '2 hrs' },
+        warranty: '5-year rust-free rail warranty',
+    },
+    {
+        slug: 'invisible-grills',
+        name: 'Invisible Balcony Grills',
+        tagline: 'Premium Safety',
+        bestSeller: false,
+        deposit: 1500,
+        variantId: 'variant_01M061FF1E1062269PY9XS8S7Z',
+        icon: 'Grid3x3',
+        accent: 'from-sky-500 to-blue-600',
+        hook: 'Installation Within 2 Hours in Hyderabad',
+        heroTitle: 'See the view, not the bars.',
+        heroSub:
+            '2mm SS-304 invisible balcony safety grills that hold 150 kg and disappear into the skyline. Pay a ₹1500 deposit now, balance after fitting.',
+        benefits: [
+            { icon: 'ShieldCheck', title: '150 kg load rated', text: 'Tensioned SS-304 cables strong enough to stop a fall, invisible enough to keep the view.' },
+            { icon: 'Grid3x3', title: '2 mm slim cables', text: 'Gap-customised for child safety — 2 or 3 inch spacing based on your family.' },
+            { icon: 'Eye', title: 'Unobstructed view', text: 'No bulky bars. Your high-rise balcony stays open and bright.' },
+            { icon: 'Droplets', title: 'Zero rust, zero paint', text: 'Marine-grade steel that needs no maintenance, ever.' },
+        ],
+        whyChooseUs: [
+            { title: 'Engineered for high-rises', text: 'Load-tested fixings rated for wind load on 20th-floor balconies.' },
+            { title: 'Child-safe spacing', text: 'We set cable gaps to 2 inches for toddlers, 3 inches for adults — your call.' },
+            { title: 'Clean cable tensioning', text: 'No loose sag. Every cable is tensioned and locked with concealed fasteners.' },
+            { title: '10-year cable warranty', text: 'On-site registration. Cable snap or rust? We replace free for 10 years.' },
+        ],
+        testimonials: [
+            { name: 'Arjun Naidu', location: 'Financial District', rating: 5, text: 'I can finally leave the balcony door open for my kids. The view is completely clear.' },
+            { name: 'Lakshmi Rao', location: 'Manikonda', rating: 5, text: 'Fitted in under 2 hours. Neat cabling, no mess, no rust after a year.' },
+            { name: 'Karthik V', location: 'Nallagandla', rating: 5, text: 'Worth the premium. The building committee approved it instantly.' },
+        ],
+        faqs: [
+            { q: 'How strong are invisible grills?', a: 'Each 2mm SS-304 cable is tensioned and rated to hold 150 kg — strong enough to stop a fall while staying nearly invisible.' },
+            { q: 'Are they safe for small children?', a: 'Yes. We customise cable spacing to 2 inches for toddler safety, so a child cannot slip through.' },
+            { q: 'How long is installation?', a: 'A standard balcony is grilles in about 2 hours, including measurement, tensioning and clean-up.' },
+            { q: 'What does the ₹1500 deposit cover?', a: 'It secures your slot and the free site measurement. The balance is payable after the grills are fitted and load-checked.' },
+        ],
+        stats: { customers: '3,200+', rating: '4.9', installs: '2 hrs' },
+        warranty: '10-year cable warranty',
+    },
+    {
+        slug: 'shoe-racks',
+        name: 'Wall-Mounted Shoe Racks',
+        tagline: 'Space Saver',
+        bestSeller: false,
+        deposit: 499,
+        variantId: 'variant_01M061FDDT3R281JNBX17HZ133',
+        icon: 'Layers',
+        accent: 'from-emerald-500 to-teal-600',
+        hook: 'Installation Within 2 Hours in Hyderabad',
+        heroTitle: 'Free your floor. Mount your shoes.',
+        heroSub:
+            'Custom wall-mounted shoe racks that hold 12–24 pairs and fold flat when not in use. Pay a ₹499 deposit now, balance after fitting.',
+        benefits: [
+            { icon: 'Layers', title: 'Holds 12–24 pairs', text: 'Tiered shelves sized to your family — from compact 3-tier to full 6-tier.' },
+            { icon: 'Home', title: 'Saves floor space', text: 'Wall-mounted at entry height, so your lobby stays clear and clean.' },
+            { icon: 'Droplets', title: 'Moisture-resistant finish', text: 'Laminated MDF that shrugs off wet monsoon shoes without swelling.' },
+            { icon: 'FoldVertical', title: 'Foldable option', text: 'Choose a fold-flat rack that disappears against the wall when empty.' },
+        ],
+        whyChooseUs: [
+            { title: 'Made to your wall', text: 'We measure and build on-site — no awkward gaps, no wobbly shelves.' },
+            { title: 'Heavy-duty brackets', text: 'Each tier holds 15 kg, rated for boots and heavy shoes.' },
+            { title: 'Same-day fitting', text: 'Deposit today, rack on your wall within 2 hours.' },
+            { title: '3-year rack warranty', text: 'Sagging shelf or loose bracket? We re-fix free for 3 years.' },
+        ],
+        testimonials: [
+            { name: 'Divya Krishnan', location: 'Kondapur', rating: 5, text: 'My entryway went from a shoe pile to a neat rack in one afternoon. Love it.' },
+            { name: 'Sai Teja', location: 'Begumpet', rating: 5, text: 'Holds all 18 pairs of my family’s shoes and still feels solid. Great finish.' },
+            { name: 'Anita Joshi', location: 'Miyapur', rating: 4, text: 'Quick, clean install. The foldable option is perfect for my small flat.' },
+        ],
+        faqs: [
+            { q: 'How many shoes can it hold?', a: 'Depending on the tier count you choose, a rack holds between 12 and 24 pairs — we size it to your family during the free measurement.' },
+            { q: 'Is it safe for rented walls?', a: 'Yes. We use wall anchors that hold firmly and can be patched cleanly if you move out.' },
+            { q: 'How long does fitting take?', a: 'A standard wall-mounted shoe rack is installed in about 2 hours, including measurement and levelling.' },
+            { q: 'What does the ₹499 deposit cover?', a: 'It secures your slot and the free measurement. The balance is payable after the rack is fitted and loaded.' },
+        ],
+        stats: { customers: '2,800+', rating: '4.7', installs: '2 hrs' },
+        warranty: '3-year rack warranty',
+    },
+    {
+        slug: 'mosquito-mesh-doors',
+        name: 'Mosquito Mesh Doors',
+        tagline: 'Bug-Free Home',
+        bestSeller: false,
+        deposit: 1200,
+        variantId: 'variant_01M061FF1ETRGSJAF4P1D51K23',
+        icon: 'DoorOpen',
+        accent: 'from-rose-500 to-red-600',
+        hook: 'Installation Within 2 Hours in Hyderabad',
+        heroTitle: 'Let the breeze in. Keep the bugs out.',
+        heroSub:
+            'Magnetic auto-close mosquito mesh doors custom-fit to your balcony and windows. Pay a ₹1200 deposit now, balance after fitting.',
+        benefits: [
+            { icon: 'DoorOpen', title: 'Magnetic auto-close', text: 'Walk through and the mesh snaps shut behind you — hands-free, every time.' },
+            { icon: 'Grid2x2', title: 'Fine mesh', text: '1.2mm fibreglass mesh blocks mosquitoes, flies and dust without blocking air.' },
+            { icon: 'Droplets', title: 'Washable & durable', text: 'Removable mesh you can wash under a tap. Reinforced edges that do not fray.' },
+            { icon: 'Ruler', title: 'Custom-fit to size', text: 'Made to measure for any door or window frame, including sliding balconies.' },
+        ],
+        whyChooseUs: [
+            { title: 'Made to measure', text: 'Every panel is cut and edged to your exact frame — no gaps for mosquitoes.' },
+            { title: 'Strong magnetic seal', text: 'Full-length magnets close flush, even in windy balconies.' },
+            { title: 'Pet-friendly', text: 'Reinforced mesh survives claws and tails. Optional pet flap available.' },
+            { title: '2-year mesh warranty', a: '', text: 'Tear or magnet failure? We replace free for 2 years.' },
+        ],
+        testimonials: [
+            { name: 'Meena Iyer', location: 'Ameerpet', rating: 5, text: 'No more mosquitoes at night. The magnetic close is so satisfying and the breeze still comes in.' },
+            { name: 'Faisal Ahmed', location: 'Tolichowki', rating: 5, text: 'Custom fit to my sliding balcony door — perfect seal, no gaps. Fitted in 90 minutes.' },
+            { name: 'Pooja Agarwal', location: 'Banjara Hills', rating: 5, text: 'Washable mesh is a game changer. Looks neat and keeps the flies out.' },
+        ],
+        faqs: [
+            { q: 'Will it fit my sliding balcony door?', a: 'Yes. Every mesh door is custom-measured and cut to your exact frame, including sliding doors and odd-sized windows.' },
+            { q: 'Do the magnets stay closed in wind?', a: 'Yes. We use full-length reinforced magnets that seal flush even on windy high-rise balconies.' },
+            { q: 'How long does installation take?', a: 'A standard mesh door is measured and fitted in about 2 hours, including frame cleaning and seal test.' },
+            { q: 'What does the ₹1200 deposit cover?', a: 'It secures your slot and the free measurement. The balance is payable after the mesh is fitted and seal-tested.' },
+        ],
+        stats: { customers: '4,100+', rating: '4.8', installs: '2 hrs' },
+        warranty: '2-year mesh warranty',
+    },
+];
+
+export const getProduct = (slug) => PRODUCTS.find((p) => p.slug === slug);

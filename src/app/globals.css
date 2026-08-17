@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ ==========================================================================
+  TAP TO EASY DESIGN SYSTEM & THEME TOKENS
+  Easily change your primary brand color anytime by updating --primary below.
+  Default Theme: Modern Royal / Electric Blue
+ ==========================================================================
+*/
+
+@layer base {
+  :root {
+    /* Brand Primary: Vibrant Royal Blue */
+    --primary: 221 83% 53%;             /* #2563eb */
+    --primary-foreground: 0 0% 100%;
+    
+    /* Brand Accent: Cyan / Sky Blue Glow */
+    --accent: 199 89% 48%;              /* #0ea5e9 */
+    --accent-foreground: 0 0% 100%;
+
+    /* Light Theme Backgrounds & Surfaces */
+    --background: 215 28% 97%;          /* Soft clean slate-tinted canvas #f8fafc */
+    --foreground: 222 47% 11%;          /* Rich deep navy text #0f172a */
+    --card: 0 0% 100%;                  /* Pure crisp white cards */
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    
+    /* Secondary & Muted */
+    --secondary: 214 32% 93%;           /* #e2e8f0 */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 214 25% 92%;
+    --muted-foreground: 215 16% 47%;    /* #64748b */
+    
+    /* Borders & Inputs */
+    --border: 214 28% 88%;              /* #cbd5e1 */
+    --input: 214 28% 88%;
+    --ring: 221 83% 53%;
+    
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;           /* #020617 */
+    --foreground: 210 40% 98%;          /* #f8fafc */
+    --card: 222 47% 9%;                 /* #0f172a */
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;             /* #3b82f6 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 217 91% 60%;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  overflow-x: clip;
+}
+
+/* Custom Micro-Animations */
+@keyframes tte-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.tte-marquee {
+  animation: tte-marquee 24s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0; }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tte-marquee,
+  .animate-pulse-ring {
+    animation: none;
+  }
+}
+
+/* Glassmorphism card utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.88);
+}
