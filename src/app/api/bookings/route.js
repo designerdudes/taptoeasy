@@ -1,36 +1,7 @@
 import { NextResponse } from 'next/server';
-import pb from '@/lib/pocketbaseClient';
+import dbConnect from '@/lib/mongoose';
+import Booking from '@/models/Booking';
 import { verifyAdminSession } from '@/lib/adminAuth';
-
-// Server-side memory store
-let memoryBookings = [
-    {
-        id: 'booking_sample_01',
-        name: 'Sravanthi Rao',
-        phone: '+91 98765 43210',
-        city: 'Gachibowli, Hyderabad',
-        address: 'Flat 402, My Home Bhooja',
-        product: 'Balcony Cloth Hangers',
-        service: 'new_installation',
-        deposit_amount: 999,
-        preferred_date: '2026-08-18',
-        notes: 'Ceiling height 10 ft',
-        created: '2026-08-17T01:00:00.000Z',
-    },
-    {
-        id: 'booking_sample_02',
-        name: 'Vikram Chandra',
-        phone: '+91 91234 56789',
-        city: 'Financial District, Hyderabad',
-        address: 'Tower 3, Aparna Sarovar',
-        product: 'Invisible Balcony Grills',
-        service: 'new_installation',
-        deposit_amount: 1500,
-        preferred_date: '2026-08-19',
-        notes: 'Need 2-inch child-safe spacing',
-        created: '2026-08-16T18:30:00.000Z',
-    }
-];
 
 // GET: STRICTLY PROTECTED - Only accessible with authenticated Admin session
 export async function GET(request) {
@@ -44,29 +15,22 @@ export async function GET(request) {
     }
 
     try {
-        let bookings = [];
+        await dbConnect();
 
-        if (pb) {
-            try {
-                const records = await pb.collection('bookings').getFullList({
-                    sort: '-created',
-                });
-                if (records && records.length > 0) {
-                    bookings = records;
-                }
-            } catch (pbErr) {
-                // Fallback to memory store if PocketBase daemon isn't running
-            }
-        }
+        // Fetch all bookings sorted by newest first
+        const bookings = await Booking.find({}).sort({ createdAt: -1 }).lean();
 
-        if (bookings.length === 0) {
-            bookings = memoryBookings;
-        }
+        // Map _id to id for frontend compatibility
+        const mappedBookings = bookings.map(b => ({
+            ...b,
+            id: b._id.toString(),
+            created: b.createdAt
+        }));
 
         return NextResponse.json({
             success: true,
-            total: bookings.length,
-            bookings,
+            total: mappedBookings.length,
+            bookings: mappedBookings,
         });
     } catch (error) {
         console.error('API /bookings GET error:', error);
@@ -90,49 +54,29 @@ export async function POST(request) {
             );
         }
 
-        let pbRecord = null;
-        if (pb) {
-            try {
-                pbRecord = await pb.collection('bookings').create({
-                    name: body.name,
-                    phone: body.phone,
-                    city: body.city || 'Hyderabad',
-                    address: body.address || '',
-                    service: body.service || 'new_installation',
-                    model: body.model || 'not_sure',
-                    product: body.product || 'Balcony Solution',
-                    deposit_amount: Number(body.deposit_amount) || 0,
-                    preferred_date: body.preferred_date || '',
-                    notes: body.notes || '',
-                });
-            } catch (pbErr) {
-                // Keep local record fallback
-            }
-        }
+        await dbConnect();
 
-        const newRecord = pbRecord || {
-            id: `booking_${Date.now()}`,
+        const newBooking = await Booking.create({
             name: body.name,
             phone: body.phone,
             city: body.city || 'Hyderabad',
             address: body.address || '',
+            service: body.service || 'new_installation',
+            model: body.model || 'not_sure',
             product: body.product || 'Balcony Solution',
             deposit_amount: Number(body.deposit_amount) || 0,
             preferred_date: body.preferred_date || '',
             notes: body.notes || '',
-            created: new Date().toISOString(),
-        };
-
-        memoryBookings.unshift(newRecord);
+        });
 
         return NextResponse.json({
             success: true,
             message: 'Booking received successfully',
             booking: {
-                id: newRecord.id,
-                name: newRecord.name,
-                product: newRecord.product,
-                deposit_amount: newRecord.deposit_amount,
+                id: newBooking._id.toString(),
+                name: newBooking.name,
+                product: newBooking.product,
+                deposit_amount: newBooking.deposit_amount,
             },
         });
     } catch (error) {
