@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, MapPin, Mail, Clock, ShieldCheck, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { PRODUCTS, PHONE_NUMBER, PHONE_NUMBER_RAW, getWhatsAppLink } from '@/data/products';
 import { LOCATIONS } from '@/data/locations';
@@ -12,11 +13,17 @@ export default function Footer() {
             <div className="mx-auto grid w-full max-w-[80rem] gap-10 px-4 sm:px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Col 1: Brand Info */}
                 <div className="space-y-4">
-                    <Link href="/" className="font-display text-xl font-extrabold tracking-tight flex items-center gap-1">
-                        tap<span className="text-primary font-black">.</span>to easy
+                    <Link href="/" className="inline-flex items-center">
+                        <Image
+                            src="/tap-to-easy-logo.png"
+                            alt="Tap to Easy Home Improvement Hyderabad"
+                            width={148}
+                            height={44}
+                            className="h-10 w-auto object-contain"
+                        />
                     </Link>
                     <p className="text-sm leading-relaxed text-muted-foreground">
-                        Hyderabad’s #1 dedicated balcony upgrade & installation specialists. Trained in-house crew, genuine Jindal Stainless Steel materials, free measurement visits, and multi-year warranties.
+                        Hyderabad&apos;s dedicated home improvement specialists — cloth hangers, invisible grills, shoe racks, mosquito mesh, pigeon nets and more. Professional installation with reliable after-sales support.
                     </p>
                     <div className="flex items-center gap-2 text-xs font-semibold text-primary">
                         <ShieldCheck className="h-4 w-4" /> 100% In-House Uniformed Crew
@@ -66,7 +73,7 @@ export default function Footer() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2.5 font-bold text-emerald-600 transition hover:text-emerald-700"
                         >
-                            <MessageCircle className="h-4 w-4 fill-emerald-600" /> WhatsApp: 90000 12345
+                            <MessageCircle className="h-4 w-4 fill-emerald-600" /> WhatsApp: +91 93908 04146
                         </a>
                         <a
                             href={`tel:${PHONE_NUMBER_RAW}`}
@@ -75,10 +82,10 @@ export default function Footer() {
                             <Phone className="h-4 w-4 text-primary" /> Call: {PHONE_NUMBER}
                         </a>
                         <p className="flex items-center gap-2.5">
-                            <Mail className="h-4 w-4 text-primary" /> care@taptoeasy.com
+                            <Mail className="h-4 w-4 text-primary" /> info@taptoeasy.com
                         </p>
                         <p className="flex items-center gap-2.5">
-                            <Clock className="h-4 w-4 text-primary" /> Mon–Sat: 8:00 AM – 8:00 PM
+                            <Clock className="h-4 w-4 text-primary" /> Mon-Sun: 8:00 AM – 8:00 PM
                         </p>
                         <p className="flex items-center gap-2.5">
                             <MapPin className="h-4 w-4 text-primary" /> Hyderabad & Secunderabad

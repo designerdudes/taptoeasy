@@ -6,7 +6,6 @@ import { verifyAdminSession } from '@/lib/adminAuth';
 // GET: STRICTLY PROTECTED - Only accessible with authenticated Admin session
 export async function GET(request) {
     const isAuthorized = verifyAdminSession(request);
-
     if (!isAuthorized) {
         return NextResponse.json(
             { error: 'Unauthorized. Admin authentication required to access customer booking data.' },
@@ -15,10 +14,17 @@ export async function GET(request) {
     }
 
     try {
+        console.log('[BOOKINGS GET] Connecting to MongoDB...');
         await dbConnect();
+        console.log('[BOOKINGS GET] ✅ MongoDB connected');
 
         // Fetch all bookings sorted by newest first
         const bookings = await Booking.find({}).sort({ createdAt: -1 }).lean();
+        console.log(`[BOOKINGS GET] ✅ Found ${bookings.length} bookings in DB`);
+
+        if (bookings.length > 0) {
+            console.log('[BOOKINGS GET] Sample first booking:', JSON.stringify(bookings[0], null, 2));
+        }
 
         // Map _id to id for frontend compatibility
         const mappedBookings = bookings.map(b => ({
@@ -33,9 +39,10 @@ export async function GET(request) {
             bookings: mappedBookings,
         });
     } catch (error) {
-        console.error('API /bookings GET error:', error);
+        console.error('[BOOKINGS GET] ❌ ERROR:', error?.message || error);
+        console.error('[BOOKINGS GET] Stack:', error?.stack);
         return NextResponse.json(
-            { error: 'Failed to retrieve bookings' },
+            { error: 'Failed to retrieve bookings', detail: error?.message },
             { status: 500 }
         );
     }
@@ -68,7 +75,6 @@ export async function POST(request) {
             preferred_date: body.preferred_date || '',
             notes: body.notes || '',
         });
-
         return NextResponse.json({
             success: true,
             message: 'Booking received successfully',
@@ -80,7 +86,6 @@ export async function POST(request) {
             },
         });
     } catch (error) {
-        console.error('API /bookings POST error:', error);
         return NextResponse.json(
             { error: 'Internal Server Error' },
             { status: 500 }

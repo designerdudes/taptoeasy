@@ -17,6 +17,20 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/products/cloth-hangers',
+        destination: '/products/premium-ceiling-hanger',
+        permanent: true,
+      },
+      {
+        source: '/products/mosquito-mesh-doors',
+        destination: '/products/mosquito-mesh',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

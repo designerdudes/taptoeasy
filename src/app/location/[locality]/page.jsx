@@ -242,7 +242,7 @@ export default function LocalityLandingPage({ params }) {
                                             <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium text-foreground">
                                                 <span className="rounded-md bg-secondary px-2.5 py-1">Jindal Stainless Steel</span>
                                                 <span className="rounded-md bg-secondary px-2.5 py-1">{p.warranty}</span>
-                                                <span className="rounded-md bg-secondary px-2.5 py-1">2-Hour Fitting</span>
+                                                <span className="rounded-md bg-secondary px-2.5 py-1">4-Hour Fitting</span>
                                             </div>
                                         </div>
 

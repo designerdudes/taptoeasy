@@ -25,12 +25,24 @@ import {
     Zap,
     MessageCircle,
     Check,
-    HelpCircle,
+    Wrench,
+    AlertCircle,
 } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import BookingForm from '@/components/BookingForm';
+import ProductImageGallery from '@/components/ProductImageGallery';
+import ProductComparison from '@/components/ProductComparison';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
-import { PRODUCTS, getProduct, PHONE_NUMBER, PHONE_NUMBER_RAW, getWhatsAppLink } from '@/data/products';
+import {
+    PRODUCTS,
+    PRODUCT_CATEGORIES,
+    INSTALLATION_STEPS,
+    getProduct,
+    getRelatedProducts,
+    PHONE_NUMBER,
+    PHONE_NUMBER_RAW,
+    getWhatsAppLink,
+} from '@/data/products';
 import { LOCATIONS } from '@/data/locations';
 
 const ICONS = {
@@ -48,13 +60,24 @@ const ICONS = {
     Hand,
     Clock,
     Zap,
+    Wrench,
+    CheckCircle2,
+    MapPin,
+    Sparkles,
 };
 
-const PROCESS = [
-    { icon: 'Phone', title: 'Book Free Sizing Visit', text: 'Pick a date online or on WhatsApp. We confirm your slot within 2 working hours.' },
-    { icon: 'Ruler', title: 'Free Measurement Visit', text: 'Our technician visits your home with sample Jindal steel rails/meshes and confirms sizing.' },
-    { icon: 'Wind', title: 'Clean 2-Hour Installation', text: 'Core-drilled anchors, dust sheets down, debris carried away. Zero mess left behind.' },
-    { icon: 'ShieldCheck', title: 'Load Test & Warranty', text: 'We load-test together, register your 3–7 years warranty on-site, and ensure total satisfaction.' },
+// Ceiling hanger slugs that show the comparison table
+const CEILING_HANGER_SLUGS = [
+    'premium-ceiling-hanger',
+    'deluxe-ceiling-hanger',
+    'normal-ceiling-hanger',
+];
+
+// Hanger slugs (ceiling + wall + beam) that show size selector hint
+const ALL_HANGER_SLUGS = [
+    ...CEILING_HANGER_SLUGS,
+    'wall-mounted-hanger',
+    'beam-mounted-hanger',
 ];
 
 export async function generateStaticParams() {
@@ -66,40 +89,34 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
     const product = getProduct(params.slug);
     if (!product) {
-        return {
-            title: 'Service Not Found',
-        };
+        return { title: 'Service Not Found' };
     }
 
+    const ogImage = product.media?.[0]?.src || '';
+
     return {
-        title: `${product.name} in Hyderabad | Jindal Stainless Steel | Free Site Visit`,
-        description: `Best ${product.name.toLowerCase()} in Hyderabad installed in 2 hours. ${product.heroSub} Official ${product.warranty}. Free doorstep measurement visit.`,
-        keywords: [
-            `${product.name.toLowerCase()} hyderabad`,
-            `jindal stainless steel ${product.name.toLowerCase()}`,
-            `best ${product.name.toLowerCase()} hyderabad`,
-            `${product.slug.replace(/-/g, ' ')} installation hyderabad`,
-            `ceiling cloth hanger for balcony hyderabad`,
-            `invisible safety grills for balcony hyderabad`,
-            `balcony cloth drying pulley hanger`,
-            `${product.name.toLowerCase()} gachibowli miyapur kukatpally kondapur`,
-            'tap to easy balcony solutions hyderabad',
-        ],
+        title: product.seo?.title || `${product.name} in Hyderabad | Tap to Easy`,
+        description:
+            product.seo?.description ||
+            `${product.name} in Hyderabad. ${product.heroSub} Free doorstep measurement visit.`,
+        keywords: product.seo?.keywords || [],
         alternates: {
             canonical: `https://taptoeasy.com/products/${product.slug}`,
         },
         openGraph: {
-            title: `${product.name} in Hyderabad | Tap to Easy`,
-            description: `${product.name} installed in 2 hours across Hyderabad. ${product.warranty}. Free doorstep measurement.`,
+            title: product.seo?.title || `${product.name} in Hyderabad | Tap to Easy`,
+            description: product.seo?.description || product.heroSub,
             url: `https://taptoeasy.com/products/${product.slug}`,
-            images: [
-                {
-                    url: product.image,
-                    width: 1200,
-                    height: 630,
-                    alt: `${product.name} Installation Hyderabad`,
-                },
-            ],
+            images: ogImage
+                ? [
+                    {
+                        url: ogImage,
+                        width: product.media[0]?.width || 800,
+                        height: product.media[0]?.height || 800,
+                        alt: product.media[0]?.alt || `${product.name} — Tap to Easy Hyderabad`,
+                    },
+                ]
+                : [],
         },
     };
 }
@@ -111,197 +128,299 @@ export default function ProductLandingPage({ params }) {
         notFound();
     }
 
-    const HeroIcon = ICONS[product.icon] ?? Sparkles;
+    const relatedProducts = getRelatedProducts(product.slug);
+    const isCeilingHanger = CEILING_HANGER_SLUGS.includes(product.slug);
+    const isHanger = ALL_HANGER_SLUGS.includes(product.slug);
+    const isRepair = product.slug === 'hanger-repair';
+
+    // ── Structured Data ──────────────────────────────────────────────────────
+    // Use Service schema — avoids fake price/offer/rating that Google would penalise.
+    // FAQPage schema included separately for rich results.
+    const serviceSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: product.name,
+        description: product.heroSub,
+        provider: {
+            '@type': 'LocalBusiness',
+            name: 'Tap to Easy',
+            url: 'https://taptoeasy.com',
+            telephone: PHONE_NUMBER_RAW,
+            address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Hyderabad',
+                addressRegion: 'Telangana',
+                addressCountry: 'IN',
+            },
+        },
+        areaServed: {
+            '@type': 'City',
+            name: 'Hyderabad',
+        },
+        serviceType: product.category,
+    };
+
+    const faqSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: product.faqs.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+    };
+
+    const breadcrumbSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://taptoeasy.com' },
+            { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://taptoeasy.com/#products' },
+            { '@type': 'ListItem', position: 3, name: product.category, item: `https://taptoeasy.com/#products` },
+            { '@type': 'ListItem', position: 4, name: product.name, item: `https://taptoeasy.com/products/${product.slug}` },
+        ],
+    };
 
     return (
         <div className="flex flex-col">
-            {/* Rich Schema markup for Google SERP rankings */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'Product',
-                        name: `${product.name} - Tap to Easy Hyderabad`,
-                        image: product.image,
-                        description: product.heroSub,
-                        brand: {
-                            '@type': 'Brand',
-                            name: 'Tap to Easy / Jindal Stainless Steel',
-                        },
-                        aggregateRating: {
-                            '@type': 'AggregateRating',
-                            ratingValue: product.stats.rating,
-                            reviewCount: '3200',
-                        },
-                        offers: {
-                            '@type': 'Offer',
-                            price: '0',
-                            priceCurrency: 'INR',
-                            availability: 'https://schema.org/InStock',
-                            priceValidUntil: '2028-12-31',
-                            description: 'Free site measurement and consultation visit in Hyderabad',
-                        },
-                    }),
-                }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'FAQPage',
-                        mainEntity: product.faqs.map((f) => ({
-                            '@type': 'Question',
-                            name: f.q,
-                            acceptedAnswer: { '@type': 'Answer', text: f.a },
-                        })),
-                    }),
-                }}
-            />
+            {/* ── Structured Data ── */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-            {/* HERO SECTION */}
-            <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background py-12 lg:py-20">
-                <div className={`pointer-events-none absolute -right-32 -top-24 h-[32rem] w-[32rem] rounded-full bg-gradient-to-br ${product.accent} opacity-15 blur-3xl`} />
+            {/* ═══════════════════════════════════════════════════════════════
+                HERO — Amazon-style: Image LEFT, Product info RIGHT
+            ═══════════════════════════════════════════════════════════════ */}
+            <section className="relative overflow-hidden bg-gradient-to-b from-primary/8 via-background to-background py-10 lg:py-16">
+                <div className={`pointer-events-none absolute -right-32 -top-24 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br ${product.accent} opacity-10 blur-3xl`} />
 
-                <div className="mx-auto grid w-full max-w-[80rem] items-start gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
-                    {/* Left Column: Product Info */}
-                    <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <Link href="/#products" className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-primary transition">
-                                <ArrowLeft className="h-3.5 w-3.5" /> All Services
-                            </Link>
-                            <span className="text-muted-foreground/40">/</span>
-                            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
-                                <Clock className="h-3 w-3" /> {product.hook}
-                            </span>
-                            {product.bestSeller && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
-                                    <Sparkles className="h-3 w-3" /> {product.tagline}
+                <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                    {/* Breadcrumb */}
+                    <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                        <Link href="/" className="hover:text-primary transition">Home</Link>
+                        <span>/</span>
+                        <Link href="/#products" className="hover:text-primary transition">Services</Link>
+                        <span>/</span>
+                        <span className="text-foreground font-medium">{product.name}</span>
+                    </nav>
+
+                    <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16 items-start">
+
+                        {/* ── LEFT: Product Image Gallery ── */}
+                        <div className="lg:sticky lg:top-24 lg:self-start min-w-0">
+                            <ProductImageGallery
+                                media={product.media || []}
+                                productName={product.name}
+                            />
+                        </div>
+
+                        {/* ── RIGHT: Product Info + Booking ── */}
+                        <div className="flex flex-col gap-6 min-w-0">
+                            {/* Category + hook badges */}
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-muted-foreground">
+                                    {product.category}
                                 </span>
+                                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+                                    <Clock className="h-3 w-3" /> {product.hook}
+                                </span>
+                                {product.bestSeller && (
+                                    <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
+                                        <Sparkles className="h-3 w-3" /> Best Seller
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* H1 */}
+                            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-foreground">
+                                {product.heroTitle}
+                            </h1>
+
+                            {/* Short description */}
+                            <p className="text-base leading-relaxed text-muted-foreground">
+                                {product.shortDescription}
+                            </p>
+
+                            {/* Key spec pills */}
+                            <div className="flex flex-wrap gap-2">
+                                {product.bracket && (
+                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <Check className="h-3 w-3 text-primary" /> {product.bracket}
+                                    </span>
+                                )}
+                                {product.rope && (
+                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <Check className="h-3 w-3 text-primary" /> Rope: {product.rope}
+                                    </span>
+                                )}
+                                {product.pipe && (
+                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <Check className="h-3 w-3 text-primary" /> {product.pipe}
+                                    </span>
+                                )}
+                                {product.wireOptions?.map((w) => (
+                                    <span key={w} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <Check className="h-3 w-3 text-primary" /> {w} Wire
+                                    </span>
+                                ))}
+                                {product.netOptions?.map((n) => (
+                                    <span key={n} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <Check className="h-3 w-3 text-primary" /> {n} Net
+                                    </span>
+                                ))}
+                                {product.rackOptions?.map((r) => (
+                                    <span key={r} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <Check className="h-3 w-3 text-primary" /> {r}
+                                    </span>
+                                ))}
+                            </div>
+
+                            {/* Size display for hangers */}
+                            {isHanger && product.allSizes && (
+                                <div className="rounded-xl border border-border bg-secondary/20 p-4">
+                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                                        Available Sizes
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {product.allSizes.map((size) => (
+                                            <span
+                                                key={size}
+                                                className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-semibold text-foreground"
+                                            >
+                                                {size}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <p className="mt-2 text-xs text-muted-foreground">
+                                        The most suitable size for your space will be confirmed during the free measurement visit.
+                                    </p>
+                                </div>
                             )}
-                        </div>
 
-                        <h1 className="font-display mt-6 text-3xl sm:text-5xl font-extrabold leading-[1.08] tracking-tight text-foreground">
-                            {product.heroTitle}
-                        </h1>
+                            {/* Repair note */}
+                            {isRepair && (
+                                <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-4">
+                                    <div className="flex items-start gap-2">
+                                        <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+                                        <p className="text-xs leading-relaxed text-amber-800 font-medium">
+                                            We do not replace hanger pipes during repair service. Repair feasibility depends on the existing hanger condition and installation setup. Confirmed on-site before any work begins.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
 
-                        <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                            {product.heroSub}
-                        </p>
-
-                        {/* Badges */}
-                        <div className="mt-6 flex flex-wrap gap-2.5">
-                            {['Jindal Stainless Steel', 'Free Sizing Visit', product.warranty].map((usp) => (
-                                <span key={usp} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-600/20 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                    <Check className="h-3.5 w-3.5 text-emerald-600" /> {usp}
-                                </span>
-                            ))}
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="mt-8 flex flex-wrap items-center gap-3.5">
+                            {/* Primary CTAs */}
+                            <div className="flex flex-col gap-3 sm:flex-row">
+                                <a
+                                    href="#book"
+                                    className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-[0.98]"
+                                >
+                                    Book Free Measurement <ArrowRight className="h-4 w-4" />
+                                </a>
+                                <a
+                                    href={getWhatsAppLink(product.name)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-50 px-6 text-sm font-bold text-emerald-700 hover:bg-emerald-100 transition active:scale-[0.98]"
+                                >
+                                    <MessageCircle className="h-4 w-4 fill-emerald-600 text-emerald-600" /> WhatsApp Us
+                                </a>
+                            </div>
                             <a
-                                href="#book"
-                                className="flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-7 text-sm sm:text-base font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-[0.98]"
+                                href={`tel:${PHONE_NUMBER_RAW}`}
+                                className="flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-border bg-background px-6 text-sm font-semibold text-foreground hover:border-primary/40 hover:bg-secondary/30 transition active:scale-[0.98]"
                             >
-                                Book Free Visit <ArrowRight className="h-4 w-4" />
+                                <Phone className="h-4 w-4 text-primary" /> {PHONE_NUMBER}
                             </a>
-                            
-                            <a
-                                href={getWhatsAppLink(product.name)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex min-h-[48px] items-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-50 px-6 text-sm sm:text-base font-bold text-emerald-700 hover:bg-emerald-100 transition active:scale-[0.98]"
-                            >
-                                <MessageCircle className="h-4 w-4 fill-emerald-600 text-emerald-600" /> WhatsApp Booking
-                            </a>
+
+                            {/* Trust signals */}
+                            <div className="flex flex-wrap gap-2 pt-1">
+                                {['Free Installation', 'In-House Crew', 'Hyderabad Wide Service'].map((t) => (
+                                    <span key={t} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground">
+                                        <CheckCircle2 className="h-3.5 w-3.5 text-primary" /> {t}
+                                    </span>
+                                ))}
+                            </div>
+
+                            {/* Booking form */}
+                            {/* <div id="book" className="scroll-mt-24 mt-2">
+                                <BookingForm product={product} />
+                            </div> */}
                         </div>
-
-                        {/* Quick Stats */}
-                        <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-6">
-                            <div>
-                                <dt className="font-display text-2xl font-bold text-primary">{product.stats.customers}</dt>
-                                <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Homes Fitted</dd>
-                            </div>
-                            <div>
-                                <dt className="font-display text-2xl font-bold text-primary flex items-center gap-0.5">
-                                    {product.stats.rating}<Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                                </dt>
-                                <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Avg Rating</dd>
-                            </div>
-                            <div>
-                                <dt className="font-display text-2xl font-bold text-primary">{product.stats.installs}</dt>
-                                <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Installation</dd>
-                            </div>
-                        </dl>
-
-                        {/* Warranty Box */}
-                        <div className="mt-8 hidden lg:flex items-center gap-4 rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-5 text-primary-foreground shadow-md">
-                            <HeroIcon className="h-10 w-10 shrink-0 text-cyan-300" strokeWidth={1.5} />
-                            <div>
-                                <p className="font-display text-base font-bold">{product.warranty}</p>
-                                <p className="text-xs text-primary-foreground/80">Jindal Stainless Steel quality. Registered on-site upon completion.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right Column: Free Booking Form */}
-                    <div id="book" className="scroll-mt-24">
-                        <BookingForm product={product} />
                     </div>
                 </div>
             </section>
 
-            {/* MARQUEE */}
+            {/* ── Marquee ── */}
             <div className="overflow-hidden border-y border-border bg-primary py-3 text-primary-foreground">
                 <div className="tte-marquee flex w-max gap-10 whitespace-nowrap text-xs sm:text-sm font-semibold uppercase tracking-[0.2em]">
                     {[
-                        'Installation within 2 hours',
+                        'Installation within 4 hours',
                         'Hyderabad-wide service',
-                        'Genuine Jindal Stainless Steel',
-                        'Free measurement visit',
-                        'Trained in-house crew',
-                        'Warranty upto 3–7 Years',
-                    ].map((item, i) => (
+                        'Free installation',
+                        'In-house uniformed crew',
+                        'After-sales support',
+                        'Home improvement specialists',
+                    ].flatMap((item, i) => [
                         <span key={i} className="flex items-center gap-10">
                             {item} <span className="text-cyan-300">/</span>
-                        </span>
-                    ))}
-                    {[
-                        'Installation within 2 hours',
-                        'Hyderabad-wide service',
-                        'Genuine Jindal Stainless Steel',
-                        'Free measurement visit',
-                        'Trained in-house crew',
-                        'Warranty upto 3–7 Years',
-                    ].map((item, i) => (
-                        <span key={`rep-${i}`} className="flex items-center gap-10">
+                        </span>,
+                        <span key={`r${i}`} className="flex items-center gap-10">
                             {item} <span className="text-cyan-300">/</span>
-                        </span>
-                    ))}
+                        </span>,
+                    ])}
                 </div>
             </div>
 
-            {/* TECHNICAL SPECIFICATIONS TABLE */}
-            {product.specifications && (
+            {/* ═══════════════════════════════════════════════════════════════
+                PRODUCT OVERVIEW
+            ═══════════════════════════════════════════════════════════════ */}
+            <section className="py-14 border-b border-border bg-background">
+                <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                    <Reveal>
+                        <div className="max-w-3xl">
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                About This Product
+                            </span>
+                            <h2 className="font-display mt-2 text-2xl sm:text-3xl font-bold text-foreground">
+                                {product.name} — Overview
+                            </h2>
+                            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+                                {product.heroSub}
+                            </p>
+                            {product.installationNotes && (
+                                <div className="mt-5 rounded-xl border border-border bg-secondary/20 p-4">
+                                    <p className="text-sm leading-relaxed text-muted-foreground">
+                                        <strong className="text-foreground font-semibold">Installation note: </strong>
+                                        {product.installationNotes}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </Reveal>
+                </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SPECIFICATIONS TABLE
+            ═══════════════════════════════════════════════════════════════ */}
+            {product.specifications?.length > 0 && (
                 <section className="py-14 border-b border-border bg-card">
                     <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
                         <Reveal>
-                            <div className="max-w-2xl">
-                                <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Technical Details</span>
-                                <h2 className="font-display mt-2 text-2xl sm:text-3xl font-bold text-foreground">
-                                    {product.name} Engineering Specifications
-                                </h2>
-                            </div>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                Specifications
+                            </span>
+                            <h2 className="font-display mt-2 text-2xl sm:text-3xl font-bold text-foreground">
+                                {product.name} Specifications
+                            </h2>
                         </Reveal>
-
                         <div className="mt-8 overflow-hidden rounded-2xl border border-border">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-secondary/60 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                                     <tr>
                                         <th className="px-5 py-3.5">Specification</th>
-                                        <th className="px-5 py-3.5">Technical Details</th>
+                                        <th className="px-5 py-3.5">Details</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-border bg-card">
@@ -310,9 +429,7 @@ export default function ProductLandingPage({ params }) {
                                             <td className="px-5 py-3.5 font-bold text-foreground sm:w-1/3">
                                                 {spec.label}
                                             </td>
-                                            <td className="px-5 py-3.5 text-muted-foreground">
-                                                {spec.value}
-                                            </td>
+                                            <td className="px-5 py-3.5 text-muted-foreground">{spec.value}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -322,166 +439,261 @@ export default function ProductLandingPage({ params }) {
                 </section>
             )}
 
-            {/* BENEFITS SECTION */}
-            <section id="benefits" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-background">
-                <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
-                    <Reveal>
-                        <div className="max-w-2xl">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Features & Benefits</span>
-                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                Engineered with Genuine Jindal Stainless Steel
+            {/* ═══════════════════════════════════════════════════════════════
+                REPAIR OPTIONS (repair page only)
+            ═══════════════════════════════════════════════════════════════ */}
+            {isRepair && product.repairOptions && (
+                <section className="py-16 border-b border-border bg-secondary/20">
+                    <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                        <Reveal>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                Repair Options
+                            </span>
+                            <h2 className="font-display mt-2 text-2xl sm:text-3xl font-bold text-foreground">
+                                What Can Be Replaced
                             </h2>
-                            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                                Heavy-duty rust-resistant construction designed specifically for Hyderabad apartment balconies.
+                            <p className="mt-2 text-sm text-muted-foreground">
+                                We do not replace hanger pipes during repair service.
                             </p>
+                        </Reveal>
+                        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                            {product.repairOptions.map((opt, i) => {
+                                const Icon = ICONS[opt.icon] ?? Wrench;
+                                return (
+                                    <Reveal key={opt.name} delay={i * 0.06}>
+                                        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                                            <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${product.accent} text-white`}>
+                                                <Icon className="h-5 w-5" strokeWidth={1.7} />
+                                            </span>
+                                            <h3 className="font-display mt-3 text-base font-bold text-foreground">
+                                                {opt.name}
+                                            </h3>
+                                            <p className="mt-1 text-sm text-muted-foreground">{opt.description}</p>
+                                        </div>
+                                    </Reveal>
+                                );
+                            })}
                         </div>
-                    </Reveal>
-
-                    <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {product.benefits.map((b, i) => {
-                            const Icon = ICONS[b.icon] ?? Sparkles;
-                            return (
-                                <Reveal key={b.title} delay={i * 0.06}>
-                                    <div className="flex h-full flex-col gap-3 rounded-3xl border border-border bg-card p-6 shadow-sm">
-                                        <span className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${product.accent} text-white shadow-sm`}>
-                                            <Icon className="h-6 w-6" strokeWidth={1.7} />
-                                        </span>
-                                        <h3 className="font-display mt-2 text-lg font-bold text-foreground">{b.title}</h3>
-                                        <p className="text-sm leading-relaxed text-muted-foreground">{b.text}</p>
+                        {product.repairCombinations && (
+                            <div className="mt-8">
+                                <Reveal>
+                                    <h3 className="font-display text-lg font-bold text-foreground">Available Repair Combinations</h3>
+                                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                                        {product.repairCombinations.map((combo) => (
+                                            <div key={combo.label} className="rounded-xl border border-border bg-card p-4">
+                                                <p className="font-semibold text-foreground text-sm">{combo.label}</p>
+                                                <p className="mt-1 text-xs text-muted-foreground">{combo.description}</p>
+                                            </div>
+                                        ))}
                                     </div>
                                 </Reveal>
-                            );
-                        })}
+                            </div>
+                        )}
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
-            {/* WHY CHOOSE US */}
-            <section id="why" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-secondary/30">
-                <div className="mx-auto grid w-full max-w-[80rem] gap-12 px-4 sm:px-6 lg:grid-cols-2">
-                    <div className="lg:sticky lg:top-28 lg:self-start">
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Why Choose Us</span>
-                        <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                            A crew you can trust in your home
-                        </h2>
-                        <p className="mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
-                            We are not a lead-generation marketplace. Our own trained, uniformed fitters handle every installation across Hyderabad.
-                        </p>
-                        <div className="mt-8 flex flex-wrap gap-2.5">
-                            {['Background-verified crew', 'Same-week slots', 'Jindal Stainless Steel', product.warranty].map((t) => (
-                                <span key={t} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold text-foreground shadow-sm">
-                                    <CheckCircle2 className="h-4 w-4 text-primary" /> {t}
-                                </span>
-                            ))}
+            {/* ═══════════════════════════════════════════════════════════════
+                FEATURES & BENEFITS
+            ═══════════════════════════════════════════════════════════════ */}
+            {product.benefits?.length > 0 && (
+                <section id="benefits" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-background">
+                    <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                        <Reveal>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                Features & Benefits
+                            </span>
+                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
+                                Why Choose the {product.name}?
+                            </h2>
+                        </Reveal>
+                        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                            {product.benefits.map((b, i) => {
+                                const Icon = ICONS[b.icon] ?? Sparkles;
+                                return (
+                                    <Reveal key={b.title} delay={i * 0.06}>
+                                        <div className="flex h-full flex-col gap-3 rounded-3xl border border-border bg-card p-6 shadow-sm">
+                                            <span className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${product.accent} text-white shadow-sm`}>
+                                                <Icon className="h-6 w-6" strokeWidth={1.7} />
+                                            </span>
+                                            <h3 className="font-display mt-2 text-lg font-bold text-foreground">
+                                                {b.title}
+                                            </h3>
+                                            <p className="text-sm leading-relaxed text-muted-foreground">{b.text}</p>
+                                        </div>
+                                    </Reveal>
+                                );
+                            })}
                         </div>
                     </div>
+                </section>
+            )}
 
-                    <div className="grid gap-4">
-                        {product.whyChooseUs.map((w, i) => (
-                            <Reveal key={w.title} delay={i * 0.06}>
-                                <div className="flex gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
-                                    <span className="font-display mt-0.5 text-base font-bold text-primary">0{i + 1}</span>
-                                    <div>
-                                        <h3 className="font-display text-lg font-bold text-foreground">{w.title}</h3>
-                                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{w.text}</p>
-                                    </div>
-                                </div>
+            {/* ═══════════════════════════════════════════════════════════════
+                INSTALLATION PROCESS
+            ═══════════════════════════════════════════════════════════════ */}
+            <section className="py-16 lg:py-24 border-b border-border bg-secondary/20">
+                <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                    <Reveal>
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                            How It Works
+                        </span>
+                        <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
+                            From Booking to Handover
+                        </h2>
+                    </Reveal>
+                    <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {INSTALLATION_STEPS.map((step, i) => (
+                            <Reveal key={step.title} delay={i * 0.06}>
+                                <li className="flex h-full flex-col rounded-3xl border border-border bg-card p-6 shadow-sm">
+                                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary">
+                                        {String(i + 1).padStart(2, '0')}
+                                    </span>
+                                    <h3 className="font-display mt-4 text-lg font-bold text-foreground">
+                                        {step.title}
+                                    </h3>
+                                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                                        {step.text}
+                                    </p>
+                                </li>
                             </Reveal>
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* 4-STEP PROCESS */}
-            <section className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-background">
-                <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
-                    <Reveal>
-                        <div className="max-w-2xl">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Installation Process</span>
-                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                From booking to handover in 2 hours
-                            </h2>
-                        </div>
-                    </Reveal>
-
-                    <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {PROCESS.map((step, i) => {
-                            const Icon = ICONS[step.icon] ?? Sparkles;
-                            return (
-                                <Reveal key={step.title} delay={i * 0.06}>
-                                    <li className="flex h-full flex-col rounded-3xl border border-border bg-card p-6 shadow-sm">
-                                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                                            <Icon className="h-5 w-5" strokeWidth={1.7} />
-                                        </span>
-                                        <h3 className="font-display mt-4 text-lg font-bold text-foreground">{step.title}</h3>
-                                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.text}</p>
-                                    </li>
-                                </Reveal>
-                            );
-                        })}
                     </ol>
                 </div>
             </section>
 
-            {/* TESTIMONIALS */}
-            <section id="reviews" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-secondary/30">
+            {/* ═══════════════════════════════════════════════════════════════
+                WHO IS THIS FOR? (Use Cases)
+            ═══════════════════════════════════════════════════════════════ */}
+            {product.useCases?.length > 0 && (
+                <section className="py-14 border-b border-border bg-background">
+                    <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                        <Reveal>
+                            <div className="max-w-3xl">
+                                <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                    Who Is This For?
+                                </span>
+                                <h2 className="font-display mt-2 text-2xl sm:text-3xl font-bold text-foreground">
+                                    Suitable For
+                                </h2>
+                                <ul className="mt-5 space-y-3">
+                                    {product.useCases.map((uc, i) => (
+                                        <li key={i} className="flex items-start gap-3 text-base text-muted-foreground">
+                                            <CheckCircle2 className="h-5 w-5 shrink-0 text-primary mt-0.5" />
+                                            {uc}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </Reveal>
+                    </div>
+                </section>
+            )}
+
+            {/* ═══════════════════════════════════════════════════════════════
+                HANGER COMPARISON (ceiling hangers only)
+            ═══════════════════════════════════════════════════════════════ */}
+            {isCeilingHanger && (
+                <section id="compare" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-secondary/20">
+                    <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                        <Reveal>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                Compare Options
+                            </span>
+                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground mb-8">
+                                Normal vs Deluxe vs Premium
+                            </h2>
+                        </Reveal>
+                        <ProductComparison activeSlug={product.slug} />
+                    </div>
+                </section>
+            )}
+
+            {/* ═══════════════════════════════════════════════════════════════
+                MESH OPTIONS (mosquito mesh page)
+            ═══════════════════════════════════════════════════════════════ */}
+            {product.meshOptions?.length > 0 && (
+                <section className="py-14 border-b border-border bg-background">
+                    <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                        <Reveal>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                Available Options
+                            </span>
+                            <h2 className="font-display mt-2 text-2xl sm:text-3xl font-bold text-foreground">
+                                Mosquito Mesh Types
+                            </h2>
+                        </Reveal>
+                        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {product.meshOptions.map((opt, i) => (
+                                <Reveal key={opt.name} delay={i * 0.05}>
+                                    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                                        <h3 className="font-display font-bold text-base text-foreground">{opt.name}</h3>
+                                        <p className="mt-1 text-sm text-muted-foreground">{opt.description}</p>
+                                    </div>
+                                </Reveal>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* ═══════════════════════════════════════════════════════════════
+                "NOT SURE?" TOOL
+            ═══════════════════════════════════════════════════════════════ */}
+            <section className="py-14 border-b border-border bg-primary/5">
                 <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
                     <Reveal>
-                        <div className="max-w-2xl">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Customer Reviews</span>
-                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                Loved by {product.stats.customers} Hyderabad homes
-                            </h2>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="max-w-xl">
+                                <h2 className="font-display text-xl font-bold text-foreground">
+                                    Not sure which option is right for your home?
+                                </h2>
+                                <p className="mt-2 text-sm text-muted-foreground">
+                                    Send us a photo or short video of your balcony, window, door or installation area. Our team can recommend the most suitable option.
+                                </p>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                <a
+                                    href={getWhatsAppLink(product.name)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-emerald-500 px-5 text-sm font-bold text-white hover:bg-emerald-600 transition active:scale-[0.98]"
+                                >
+                                    <MessageCircle className="h-4 w-4 fill-white" /> WhatsApp a Photo
+                                </a>
+                                <a
+                                    href="#book"
+                                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition active:scale-[0.98]"
+                                >
+                                    Book Free Measurement <ArrowRight className="h-4 w-4" />
+                                </a>
+                            </div>
                         </div>
                     </Reveal>
-
-                    <div className="mt-10 grid gap-6 md:grid-cols-3">
-                        {product.testimonials.map((t, i) => (
-                            <Reveal key={t.name} delay={i * 0.06}>
-                                <figure className="flex h-full flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-sm">
-                                    <div>
-                                        <div className="flex gap-1 text-amber-500">
-                                            {Array.from({ length: 5 }).map((_, k) => (
-                                                <Star key={k} className="h-4 w-4 fill-amber-500" />
-                                            ))}
-                                        </div>
-                                        <blockquote className="mt-4 text-sm leading-relaxed text-foreground">“{t.text}”</blockquote>
-                                    </div>
-                                    <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-4">
-                                        <span className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${product.accent} text-sm font-bold text-white`}>
-                                            {t.name.split(' ').map((n) => n[0]).join('')}
-                                        </span>
-                                        <div>
-                                            <p className="text-sm font-bold text-foreground">{t.name}</p>
-                                            <p className="text-xs text-muted-foreground">{t.location}, Hyderabad</p>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </Reveal>
-                        ))}
-                    </div>
                 </div>
             </section>
 
-            {/* EXPANDED FAQS */}
+            {/* ═══════════════════════════════════════════════════════════════
+                FAQS
+            ═══════════════════════════════════════════════════════════════ */}
             <section id="faq" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-background">
                 <div className="mx-auto w-full max-w-[52rem] px-4 sm:px-6">
                     <Reveal>
                         <div className="text-center">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Questions & Answers</span>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">FAQ</span>
                             <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                {product.name} FAQs (Hyderabad)
+                                {product.name} — Frequently Asked Questions
                             </h2>
-                            <p className="mt-2 text-sm text-muted-foreground">
-                                Everything you need to know about specifications, ceiling fittings, and warranties.
-                            </p>
                         </div>
                     </Reveal>
-
                     <div className="mt-10">
                         <Accordion type="single" collapsible className="w-full space-y-3">
                             {product.faqs.map((f, i) => (
-                                <AccordionItem key={i} value={`prod-faq-${i}`} className="rounded-2xl border border-border bg-card px-5">
+                                <AccordionItem
+                                    key={i}
+                                    value={`faq-${i}`}
+                                    className="rounded-2xl border border-border bg-card px-5"
+                                >
                                     <AccordionTrigger className="text-base font-bold text-foreground hover:no-underline hover:text-primary">
                                         {f.q}
                                     </AccordionTrigger>
@@ -492,13 +704,12 @@ export default function ProductLandingPage({ params }) {
                             ))}
                         </Accordion>
                     </div>
-
                     <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                         <a
                             href="#book"
                             className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-8 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-primary/90 active:scale-[0.98]"
                         >
-                            Book My Free Sizing Visit <ArrowRight className="h-4 w-4" />
+                            Book Free Measurement <ArrowRight className="h-4 w-4" />
                         </a>
                         <a
                             href={getWhatsAppLink(product.name)}
@@ -512,14 +723,65 @@ export default function ProductLandingPage({ params }) {
                 </div>
             </section>
 
-            {/* LOCALITY COVERAGE STRIP */}
+            {/* ═══════════════════════════════════════════════════════════════
+                RELATED PRODUCTS
+            ═══════════════════════════════════════════════════════════════ */}
+            {relatedProducts.length > 0 && (
+                <section className="py-16 lg:py-24 border-b border-border bg-secondary/20">
+                    <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                        <Reveal>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                                You May Also Need
+                            </span>
+                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
+                                Related Services
+                            </h2>
+                        </Reveal>
+                        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                            {relatedProducts.map((rp, i) => (
+                                <Reveal key={rp.slug} delay={i * 0.06}>
+                                    <Link
+                                        href={`/products/${rp.slug}`}
+                                        className="group flex h-full flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:-translate-y-1 hover:border-primary/30 hover:shadow-md duration-200"
+                                    >
+                                        <div>
+                                            <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${rp.accent} text-white`}>
+                                                {(() => {
+                                                    const Icon = ICONS[rp.icon] ?? Sparkles;
+                                                    return <Icon className="h-5 w-5" strokeWidth={1.7} />;
+                                                })()}
+                                            </span>
+                                            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                                {rp.category}
+                                            </p>
+                                            <h3 className="font-display mt-1 text-base font-bold text-foreground group-hover:text-primary transition-colors">
+                                                {rp.name}
+                                            </h3>
+                                            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                                                {rp.shortDescription}
+                                            </p>
+                                        </div>
+                                        <div className="mt-4 flex items-center gap-1 text-xs font-bold text-primary">
+                                            View details <ArrowRight className="h-3.5 w-3.5" />
+                                        </div>
+                                    </Link>
+                                </Reveal>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SERVICE AREAS
+            ═══════════════════════════════════════════════════════════════ */}
             <section className="py-14 bg-secondary/40 border-b border-border">
                 <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
                     <h3 className="font-display text-xl font-bold text-foreground">
-                        Looking for {product.name} in a Specific Hyderabad Locality?
+                        {product.name} in Hyderabad — Service Areas
                     </h3>
                     <p className="mt-1 text-xs text-muted-foreground">
-                        Same-day doorstep measurement available across all major Hyderabad areas:
+                        Free measurement visit available across all major Hyderabad localities:
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
                         {LOCATIONS.map((l) => (
@@ -535,14 +797,14 @@ export default function ProductLandingPage({ params }) {
                 </div>
             </section>
 
-            {/* MOBILE STICKY BOOKING BAR */}
+            {/* ── Mobile Sticky CTA ── */}
             <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur-md lg:hidden shadow-lg">
                 <div className="flex items-center gap-2">
                     <a
                         href="#book"
                         className="flex flex-1 min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm active:scale-[0.98]"
                     >
-                        Book Free Visit <ArrowRight className="h-3.5 w-3.5" />
+                        Book Free Measurement <ArrowRight className="h-3.5 w-3.5" />
                     </a>
                     <a
                         href={getWhatsAppLink(product.name)}

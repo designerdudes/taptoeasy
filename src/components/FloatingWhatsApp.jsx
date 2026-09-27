@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { getWhatsAppLink } from '@/data/products';
 
 export default function FloatingWhatsApp() {
@@ -42,11 +42,11 @@ export default function FloatingWhatsApp() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Chat with Tap to Easy on WhatsApp"
-                className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_25px_-5px_rgba(37,211,102,0.6)] transition-all duration-300 hover:scale-110 active:scale-95"
+                className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#00000] text-white shadow-[0_10px_25px_-5px_rgba(37,211,102,0.6)] transition-all duration-300 hover:scale-110 active:scale-95"
             >
                 {/* Pulse ring effect */}
                 <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-pulse-ring" />
-                <MessageCircle className="h-7 w-7 fill-white text-white relative z-10" />
+                <img src="/whatsapp icon.svg" alt="WhatsApp" className="h-8 w-8 relative z-10" />
             </a>
         </div>
     );

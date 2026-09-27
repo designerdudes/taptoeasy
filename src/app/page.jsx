@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import CountUp from '@/components/CountUp';
+import HomeProductTabs from '@/components/HomeProductTabs';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { PRODUCTS, HERO_IMG, PHONE_NUMBER, PHONE_NUMBER_RAW, getWhatsAppLink } from '@/data/products';
 import { LOCATIONS } from '@/data/locations';
@@ -46,7 +47,7 @@ const GENERAL_FAQS = [
         a: 'Yes! Our certified in-house technician visits your apartment with sample Jindal steel rods, cables, and meshes to measure exact balcony dimensions completely free of charge before any fitting begins.',
     },
     {
-        q: 'Which localities in Hyderabad do you provide 2-hour doorstep installation in?',
+        q: 'Which localities in Hyderabad do you provide doorstep installation in?',
         a: 'We cover all of Hyderabad & Secunderabad — including Gachibowli, Miyapur, Kukatpally, Kondapur, Madhapur, Financial District, Manikonda, Nallagandla, Tellapur, Chandanagar, Begumpet, Banjara Hills, and Nizampet.',
     },
     {
@@ -75,14 +76,14 @@ export default function HomePage() {
                     <div>
                         {/* Top Badge */}
                         <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-primary">
-                            <Clock className="h-3.5 w-3.5" /> Doorstep Fitting in 2 Hours • Hyderabad
+                            <Clock className="h-3.5 w-3.5" /> Doorstep Fitting in 4 Hours
                         </div>
 
                         {/* Main Keyword-Rich Title */}
                         <h1 className="font-display mt-6 text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.08] tracking-tight text-foreground">
-                            Hyderabad’s #1 Balcony{' '}
+                            Hyderabad&apos;s No. 1{' '}
                             <span className="relative inline-block text-primary">
-                                <span className="relative z-10">Cloth Hangers & Grills</span>
+                                <span className="relative z-10">Home Improvement Work</span>
                                 <motion.span
                                     aria-hidden
                                     initial={{ scaleX: 0 }}
@@ -94,7 +95,7 @@ export default function HomePage() {
                         </h1>
 
                         <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                            Heavy-duty Jindal Stainless Steel ceiling pulley cloth drying hangers, invisible balcony safety grills, wall shoe racks & mosquito mesh doors — measured, fitted, and warrantied at your doorstep in 2 hours.
+                            Complete home improvement solutions for modern homes — including ceiling-mounted cloth hangers, invisible grills, shoe racks, mosquito mesh and pigeon nets, with professional measurement, installation and reliable after-sales support.
                         </p>
 
                         {/* USP Badges */}
@@ -112,9 +113,9 @@ export default function HomePage() {
                                 href="#products"
                                 className="flex min-h-[50px] items-center gap-2 rounded-full bg-primary px-7 text-sm sm:text-base font-bold text-primary-foreground shadow-lg shadow-primary/25 transition duration-200 hover:bg-primary/90 active:scale-[0.98]"
                             >
-                                Book Free Sizing Visit <ArrowRight className="h-4 w-4" />
+                                Book Free Installation Visit <ArrowRight className="h-4 w-4" />
                             </a>
-                            
+
                             <a
                                 href={getWhatsAppLink()}
                                 target="_blank"
@@ -129,7 +130,7 @@ export default function HomePage() {
                         <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-6">
                             <div>
                                 <dt className="font-display text-2xl font-bold text-primary sm:text-3xl">
-                                    <CountUp value={16500} suffix="+" />
+                                    <CountUp value={20000} suffix="+" />
                                 </dt>
                                 <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Homes Fitted</dd>
                             </div>
@@ -140,19 +141,19 @@ export default function HomePage() {
                                 <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Avg Rating</dd>
                             </div>
                             <div>
-                                <dt className="font-display text-2xl font-bold text-primary sm:text-3xl">2 hrs</dt>
-                                <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Fast Install</dd>
+                                <dt className="font-display text-2xl font-bold text-primary sm:text-3xl">4 hrs</dt>
+                                <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Installation</dd>
                             </div>
                         </dl>
                     </div>
 
                     {/* Right Hero Image Card */}
-                    <div className="grid gap-4">
-                        <div className="relative overflow-hidden rounded-3xl border border-border shadow-[0_24px_60px_-30px_rgba(37,99,235,0.35)] group">
+                    <div className="grid gap-4 w-full">
+                        <div className="relative overflow-hidden rounded-[2.5rem] border border-border shadow-[0_32px_80px_-24px_rgba(37,99,235,0.4)] group">
                             <img
                                 src={HERO_IMG}
                                 alt="Jindal Stainless Steel Ceiling pulley cloth drying hanger installed on balcony in Hyderabad"
-                                className="h-72 w-full object-cover sm:h-84 transition duration-500 group-hover:scale-105"
+                                className="h-80 w-full object-cover sm:h-[400px] lg:h-[550px] xl:h-[650px] transition duration-700 ease-in-out group-hover:scale-[1.03]"
                             />
                             <div className="absolute bottom-3 left-3 right-3 rounded-2xl bg-background/95 p-3.5 backdrop-blur-md border border-border flex items-center justify-between shadow-lg">
                                 <div className="flex items-center gap-2.5">
@@ -206,67 +207,17 @@ export default function HomePage() {
                 <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
                     <Reveal>
                         <div className="max-w-2xl">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Our services</span>
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Our Home Improvement Services</span>
                             <h2 className="font-display mt-2 text-3xl font-bold leading-tight sm:text-4xl text-foreground">
-                                Balcony Upgrades Engineered with Jindal Steel
+                                Professional Home Upgrades & Installations
                             </h2>
                             <p className="mt-3 text-base text-muted-foreground leading-relaxed">
-                                Choose a service below for detailed technical specifications, load ratings, and to book your free measurement visit.
+                                Choose a category below for detailed technical specifications, product options, and to book your free measurement visit.
                             </p>
                         </div>
                     </Reveal>
 
-                    <div className="mt-12 grid gap-6 md:grid-cols-2">
-                        {PRODUCTS.map((p, i) => {
-                            const Icon = ICONS[p.icon] ?? Sparkles;
-                            return (
-                                <Reveal key={p.slug} delay={i * 0.08}>
-                                    <Link
-                                        href={`/products/${p.slug}`}
-                                        className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-card p-7 transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-25px_rgba(37,99,235,0.3)] ${
-                                            p.bestSeller ? 'border-primary ring-2 ring-primary/20' : 'border-border'
-                                        }`}
-                                    >
-                                        {p.bestSeller && (
-                                            <span className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary-foreground shadow-sm">
-                                                <Sparkles className="h-3.5 w-3.5" /> Best seller
-                                            </span>
-                                        )}
-
-                                        <div>
-                                            <span className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${p.accent} text-white shadow-md`}>
-                                                <Icon className="h-7 w-7" strokeWidth={1.6} />
-                                            </span>
-                                            
-                                            <h3 className="font-display mt-5 text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
-                                                {p.name}
-                                            </h3>
-                                            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.heroSub}</p>
-                                            
-                                            <div className="mt-5 flex flex-wrap items-center gap-3 text-xs font-semibold text-muted-foreground">
-                                                <span className="flex items-center gap-1 text-primary">
-                                                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" /> {p.stats.rating} rating
-                                                </span>
-                                                <span>•</span>
-                                                <span>{p.stats.customers} homes</span>
-                                                <span>•</span>
-                                                <span className="text-foreground">{p.warranty}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-8 flex items-center justify-between border-t border-border pt-5">
-                                            <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
-                                                <CheckCircle2 className="h-4 w-4" /> Free Sizing Visit
-                                            </div>
-                                            <span className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition group-hover:bg-primary/90 group-hover:shadow-md">
-                                                View & Book Free <ArrowRight className="h-4 w-4" />
-                                            </span>
-                                        </div>
-                                    </Link>
-                                </Reveal>
-                            );
-                        })}
-                    </div>
+                    <HomeProductTabs />
                 </div>
             </section>
 
@@ -280,7 +231,7 @@ export default function HomePage() {
                                 Fast Doorstep Installation in Your Locality
                             </h2>
                             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                                Dedicated installation vans positioned across major areas in Hyderabad for 2-hour doorstep response:
+                                Dedicated installation vans positioned across major areas in Hyderabad for fast doorstep response:
                             </p>
                         </div>
                     </Reveal>
@@ -319,16 +270,16 @@ export default function HomePage() {
             </section>
 
             {/* 2-HOUR PROCESS SECTION */}
-            <section id="process" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-secondary/30">
+            <section id="process" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-primary">
                 <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
                     <Reveal>
                         <div className="text-center max-w-2xl mx-auto">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">How it works</span>
-                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                Doorstep Installation in 4 Easy Steps
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">How it works</span>
+                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-white">
+                                Doorstep Installation Process
                             </h2>
-                            <p className="mt-3 text-sm text-muted-foreground">
-                                From your free booking to complete handover in under 2 hours.
+                            <p className="mt-3 text-sm text-secondary">
+                                From your free booking to complete handover within 4 hours.
                             </p>
                         </div>
                     </Reveal>
@@ -344,13 +295,13 @@ export default function HomePage() {
                             {
                                 step: '02',
                                 icon: Ruler,
-                                title: 'Free Measurement',
+                                title: 'On Site Free Measurement',
                                 text: 'Our technician visits your home with sample Jindal steel rails to measure and confirm sizing.',
                             },
                             {
                                 step: '03',
                                 icon: Wind,
-                                title: 'Clean 2-Hour Fit',
+                                title: 'Professional Installation',
                                 text: 'We lay drop sheets, core-drill precision mounting anchors, and carry away all drilling debris.',
                             },
                             {
@@ -379,43 +330,71 @@ export default function HomePage() {
 
             {/* WHY CHOOSE US */}
             <section id="why" className="scroll-mt-20 py-16 lg:py-24 border-b border-border bg-background">
-                <div className="mx-auto grid w-full max-w-[80rem] gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-center">
-                    <div>
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Why Tap to Easy</span>
-                        <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground leading-tight">
-                            Hyderabad’s dedicated in-house balcony installation crew
-                        </h2>
-                        <p className="mt-4 text-base text-muted-foreground leading-relaxed">
-                            Unlike freelance contractor aggregators, every Tap to Easy installation is carried out by our full-time, background-verified specialists. We guarantee precision drilling, genuine Jindal Stainless Steel materials, and long-term support.
-                        </p>
-
-                        <div className="mt-8 space-y-4">
-                            {[
-                                'Trained in-house crew on company payroll — no random third-party contractors',
-                                'Genuine Jindal Stainless Steel rust-resistant rails & high-tensile cables',
-                                'Dust-free drilling with industrial drop sheets for rented and owned homes',
-                                'Official on-site registered warranty of 3–7 years with doorstep support',
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex items-start gap-3">
-                                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                                    <span className="text-sm font-medium text-foreground">{item}</span>
-                                </div>
-                            ))}
+                <div className="mx-auto w-full max-w-[80rem] px-4 sm:px-6">
+                    <Reveal>
+                        <div className="text-center max-w-2xl mx-auto">
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Why Tap to Easy</span>
+                            <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground leading-tight">
+                                Why Customers Choose Us
+                            </h2>
+                            <p className="mt-3 text-sm text-muted-foreground">
+                                Our commitment goes beyond installation — we provide reliable support, transparent service and a professional experience from start to finish.
+                            </p>
                         </div>
-                    </div>
+                    </Reveal>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         {[
-                            { icon: Clock, title: 'Same-Day Slots', text: 'Doorstep fitting across Hyderabad within 2 hours of booking.' },
-                            { icon: ShieldCheck, title: '3–7 Yrs Warranty', text: 'Official warranty card provided upon handover.' },
-                            { icon: ThumbsUp, title: '16,500+ Homes', text: 'Trusted by gated communities in Gachibowli, Miyapur, Kukatpally.' },
-                            { icon: MapPin, title: 'City-Wide Fleet', text: 'Dedicated vans stationed across all major Hyderabad zones.' },
-                        ].map((box) => (
-                            <div key={box.title} className="rounded-3xl border border-border bg-card p-6 shadow-sm">
-                                <box.icon className="h-7 w-7 text-primary" strokeWidth={1.8} />
-                                <h3 className="font-display mt-4 text-lg font-bold text-foreground">{box.title}</h3>
-                                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{box.text}</p>
-                            </div>
+                            {
+                                icon: ShieldCheck,
+                                title: 'Best After-Sales Support',
+                                text: 'Dedicated after-sales support to make sure customers are taken care of even after installation.',
+                            },
+                            {
+                                icon: Clock,
+                                title: 'Support Within 24 Hours',
+                                text: 'Once a service issue is reported, our team aims to resolve it within 24 hours.',
+                            },
+                            {
+                                icon: CheckCircle2,
+                                title: 'No Random Third-Party Contact',
+                                text: "Customers don't have to deal with random third-party technicians or unknown contacts. Our support is managed through the Tap to Easy team.",
+                            },
+                            {
+                                icon: Zap,
+                                title: 'Technician Comes Fully Prepared',
+                                text: "Our technician carries the required tools, equipment and installation materials, so customers don't have to arrange anything.",
+                            },
+                            {
+                                icon: Star,
+                                title: 'Same-Day Warranty Start',
+                                text: 'Warranty coverage starts from the day the installation is completed and the warranty is registered.',
+                            },
+                            {
+                                icon: Sparkles,
+                                title: 'Same-Day Slot — Within 4 Hours',
+                                text: 'Where service availability permits, we provide same-day installation slots with fitting targeted within 4 hours.',
+                            },
+                            {
+                                icon: Building2,
+                                title: 'City-Wise Warehouses',
+                                text: 'City-wise warehouse support helps us maintain faster service, better availability and quicker response times.',
+                            },
+                            {
+                                icon: ThumbsUp,
+                                title: '20,000+ Homes Work Completed',
+                                text: 'More than 20,000 home improvement works completed across our service network.',
+                            },
+                        ].map((box, idx) => (
+                            <Reveal key={box.title} delay={idx * 0.06}>
+                                <div className="flex h-full flex-col rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/40 hover:shadow-md transition duration-200">
+                                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                                        <box.icon className="h-6 w-6 text-primary" strokeWidth={1.8} />
+                                    </span>
+                                    <h3 className="font-display mt-4 text-base font-bold text-foreground">{box.title}</h3>
+                                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground flex-1">{box.text}</p>
+                                </div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
@@ -428,52 +407,61 @@ export default function HomePage() {
                         <div className="text-center max-w-2xl mx-auto">
                             <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Testimonials</span>
                             <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                Rated 4.8★ by Hyderabad Residents
+                                Real Reviews from Our Customers
                             </h2>
                             <p className="mt-3 text-sm text-muted-foreground">
-                                Real reviews from homeowners in Gachibowli, Miyapur, Kukatpally & beyond.
+                                See what our customers say about our products, installation and service.
                             </p>
                         </div>
                     </Reveal>
 
-                    <div className="mt-12 grid gap-6 md:grid-cols-3">
+                    <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {[
                             {
-                                name: 'Priya Sharma',
-                                area: 'Gachibowli (My Home Bhooja)',
-                                service: 'Balcony Cloth Hanger',
-                                text: 'Booked in the morning, fitted by lunch! The 6-pipe Jindal steel pulley operates so smoothly my mother can lower it with one finger.',
+                                name: 'Izhaar Ahmed',
+                                area: 'Kohinoor by Auro Realty, Hitech City',
+                                text: 'Excellent product and Simple Installation 👌',
                             },
                             {
-                                name: 'Arjun Naidu',
-                                area: 'Financial District (Aparna Sarovar)',
-                                service: 'Invisible Safety Grills',
-                                text: 'We wanted safety for our toddlers without ruining our 18th floor view. Invisible grills look stunning and feel rock solid.',
+                                name: 'Lata Shrinivas',
+                                area: null,
+                                text: 'Nice quality product and good service. Satisfied',
                             },
                             {
-                                name: 'Meena Iyer',
-                                area: 'Ameerpet',
-                                service: 'Mosquito Mesh Door',
-                                text: 'The magnetic auto-close door is wonderful. Breeze comes in, zero mosquitoes, and the fitting was done cleanly in 1 hour.',
+                                name: 'Mohd Sam',
+                                area: 'Kokapet',
+                                text: 'Excellent work !! At Kokapet\nCustomer support is well explained in detailed\nInstallation done within 2hrs',
+                            },
+                            {
+                                name: 'Prasanthi Emani',
+                                area: null,
+                                text: 'Excellent service by their team. We have opted for new cloth hangers and also rope change for old ones. Product is really good and also service is very professional and excellent.\nTook all our requirements and fixed them and also mainly their communication is appreciable.',
+                            },
+                            {
+                                name: 'Yahya Alshami',
+                                area: null,
+                                text: 'Very good quality and very friendly way of attending customer.... on time delivery',
                             },
                         ].map((rev, idx) => (
                             <Reveal key={rev.name} delay={idx * 0.08}>
-                                <div className="flex h-full flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-sm">
+                                <div className="flex h-full flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition duration-200">
                                     <div>
-                                        <div className="flex gap-1 text-amber-500">
-                                            {Array.from({ length: 5 }).map((_, k) => (
-                                                <Star key={k} className="h-4 w-4 fill-amber-500" />
-                                            ))}
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex gap-1 text-amber-500">
+                                                {Array.from({ length: 5 }).map((_, k) => (
+                                                    <Star key={k} className="h-4 w-4 fill-amber-500" />
+                                                ))}
+                                            </div>
+                                            <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">Google Review</span>
                                         </div>
-                                        <p className="mt-4 text-sm leading-relaxed text-foreground">“{rev.text}”</p>
+                                        <p className="mt-4 text-sm leading-relaxed text-foreground whitespace-pre-line">&ldquo;{rev.text}&rdquo;</p>
                                     </div>
 
                                     <div className="mt-6 border-t border-border pt-4">
                                         <p className="text-sm font-bold text-foreground">{rev.name}</p>
-                                        <p className="text-xs text-muted-foreground">{rev.area}</p>
-                                        <span className="mt-1.5 inline-block rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-primary">
-                                            {rev.service}
-                                        </span>
+                                        {rev.area && (
+                                            <p className="text-xs text-muted-foreground mt-0.5">{rev.area}</p>
+                                        )}
                                     </div>
                                 </div>
                             </Reveal>
