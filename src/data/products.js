@@ -925,7 +925,7 @@ export const PRODUCTS = [
         media: [
             {
                 type: 'image',
-                src: 'images/products/premium ceiling hanger/2.webp',
+                src: '/images/products/premium ceiling hanger/2.webp',
                 alt: 'Hanger repair and rope replacement service \u2014 Tap to Easy Hyderabad',
                 width: 800,
                 height: 800,
@@ -933,7 +933,7 @@ export const PRODUCTS = [
             },
             {
                 type: 'image',
-                src: 'images/products/premium ceiling hanger/3.webp',
+                src: '/images/products/premium ceiling hanger/3.webp',
                 alt: 'Hanger repair and rope replacement service \u2014 Tap to Easy Hyderabad',
                 width: 800,
                 height: 800,
@@ -941,7 +941,7 @@ export const PRODUCTS = [
             },
             {
                 type: 'image',
-                src: 'images/products/premium ceiling hanger/4.webp',
+                src: '/images/products/premium ceiling hanger/4.webp',
                 alt: 'Hanger repair and rope replacement service \u2014 Tap to Easy Hyderabad',
                 width: 800,
                 height: 800,
@@ -949,7 +949,7 @@ export const PRODUCTS = [
             },
             {
                 type: 'image',
-                src: 'images/products/premium ceiling hanger/6.webp',
+                src: '/images/products/premium ceiling hanger/6.webp',
                 alt: 'Hanger repair and rope replacement service \u2014 Tap to Easy Hyderabad',
                 width: 800,
                 height: 800,
@@ -957,7 +957,7 @@ export const PRODUCTS = [
             },
             {
                 type: 'image',
-                src: 'images/products/premium ceiling hanger/14.webp',
+                src: '/images/products/premium ceiling hanger/14.webp',
                 alt: 'Hanger repair and rope replacement service \u2014 Tap to Easy Hyderabad',
                 width: 800,
                 height: 800,
@@ -965,7 +965,7 @@ export const PRODUCTS = [
             },
             {
                 type: 'image',
-                src: 'images/products/wall mounted hangeranger/8.webp',
+                src: '/images/products/wall mounted hanger/8.webp',
                 alt: 'Hanger repair and rope replacement service \u2014 Tap to Easy Hyderabad',
                 width: 800,
                 height: 800,

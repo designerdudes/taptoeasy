@@ -42,6 +42,9 @@ export default function Navbar() {
                     <Link href="/#reviews" className="transition hover:text-primary">
                         Reviews
                     </Link>
+                    <Link href="/contact" className="transition hover:text-primary">
+                        Contact
+                    </Link>
                 </nav>
 
                 {/* Contact CTA Buttons & Mobile Toggle */}
@@ -93,6 +96,9 @@ export default function Navbar() {
                         </Link>
                         <Link href="/#reviews" onClick={toggleMobileMenu} className="hover:text-primary transition py-2">
                             Reviews
+                        </Link>
+                        <Link href="/contact" onClick={toggleMobileMenu} className="hover:text-primary transition py-2">
+                            Contact
                         </Link>
                         <div className="h-px w-full bg-border my-2" />
                         <a

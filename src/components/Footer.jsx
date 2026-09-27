@@ -96,7 +96,7 @@ export default function Footer() {
 
             <div className="border-t border-border/80 bg-background/50 px-4 sm:px-6 py-6">
                 <div className="mx-auto flex w-full max-w-[80rem] flex-col items-center justify-between gap-3 text-xs text-muted-foreground sm:flex-row">
-                    <p>© {new Date().getFullYear()} Tap to Easy Home Solutions Pvt Ltd. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Tap to Easy. All rights reserved.</p>
                     <div className="flex items-center gap-4 sm:gap-6 font-medium text-foreground/80">
                         <span className="flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Free Measurement Visit</span>
                         <span>•</span>

@@ -43,6 +43,9 @@ export async function generateMetadata({ params }) {
         };
     }
 
+    const BASE = 'https://taptoeasy.com';
+    const ogImg = `${BASE}/hero section photo.webp`;
+
     return {
         title: `${loc.headline} | Tap to Easy`,
         description: loc.metaDescription,
@@ -55,20 +58,30 @@ export async function generateMetadata({ params }) {
             ...loc.communities.map((c) => `${c.toLowerCase()} balcony cloth hanger`),
         ],
         alternates: {
-            canonical: `https://taptoeasy.com/location/${loc.slug}`,
+            canonical: `${BASE}/location/${loc.slug}`,
         },
         openGraph: {
+            type: 'website',
+            locale: 'en_IN',
+            siteName: 'Tap to Easy',
             title: `${loc.headline} | Tap to Easy`,
             description: loc.metaDescription,
-            url: `https://taptoeasy.com/location/${loc.slug}`,
+            url: `${BASE}/location/${loc.slug}`,
             images: [
                 {
-                    url: HERO_IMG,
+                    url: ogImg,
                     width: 1200,
                     height: 630,
-                    alt: `Balcony installation in ${loc.name} Hyderabad`,
+                    alt: `Balcony cloth hanger and invisible grill installation in ${loc.name}, Hyderabad — Tap to Easy`,
                 },
             ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            site: '@taptoeasy',
+            title: `${loc.headline} | Tap to Easy`,
+            description: loc.metaDescription,
+            images: [ogImg],
         },
     };
 }
@@ -82,29 +95,103 @@ export default function LocalityLandingPage({ params }) {
 
     return (
         <div className="flex flex-col">
-            {/* Localized Schema Markup for Google Local SEO & Ads */}
+            {/* 1. LocalBusiness — locality-specific, links to global @id */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
-                        '@type': 'HomeAndConstructionBusiness',
-                        name: `Tap to Easy Balcony Installation - ${loc.name}`,
-                        image: HERO_IMG,
-                        url: `https://taptoeasy.com/location/${loc.slug}`,
-                        telephone: '+91-90000-12345',
-                        priceRange: 'Free Consultation',
-                        areaServed: `${loc.name}, Hyderabad, Telangana, India`,
+                        '@type': ['HomeAndConstructionBusiness', 'LocalBusiness'],
+                        '@id': `https://taptoeasy.com/location/${loc.slug}/#business`,
+                        parentOrganization: { '@id': 'https://taptoeasy.com/#business' },
+                        name: `Tap to Easy — ${loc.name}`,
                         description: loc.metaDescription,
+                        image: 'https://taptoeasy.com/hero section photo.webp',
+                        url: `https://taptoeasy.com/location/${loc.slug}`,
+                        telephone: '+91-9390804146',
+                        email: 'info@taptoeasy.com',
+                        priceRange: '₹₹',
+                        areaServed: `${loc.name}, Hyderabad, Telangana, India`,
                         address: {
                             '@type': 'PostalAddress',
                             addressLocality: loc.name,
-                            addressRegion: 'Hyderabad, Telangana',
+                            addressRegion: 'Telangana',
                             addressCountry: 'IN',
+                        },
+                        openingHoursSpecification: {
+                            '@type': 'OpeningHoursSpecification',
+                            dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+                            opens: '08:00',
+                            closes: '20:00',
+                        },
+                        aggregateRating: {
+                            '@type': 'AggregateRating',
+                            ratingValue: '4.8',
+                            reviewCount: '6400',
+                            bestRating: '5',
+                            worstRating: '1',
                         },
                     }),
                 }}
             />
+
+            {/* 2. BreadcrumbList — enables Google breadcrumb rich result */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'BreadcrumbList',
+                        itemListElement: [
+                            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://taptoeasy.com' },
+                            { '@type': 'ListItem', position: 2, name: `${loc.name} Balcony Services`, item: `https://taptoeasy.com/location/${loc.slug}` },
+                        ],
+                    }),
+                }}
+            />
+
+            {/* 3. HowTo — AEO/GEO: answers "How to book balcony installation in [locality]" */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'HowTo',
+                        name: `How to Book Balcony Cloth Hanger or Invisible Grill Installation in ${loc.name}, Hyderabad`,
+                        description: `Step-by-step guide to booking a free measurement visit for balcony installation services in ${loc.name} from Tap to Easy.`,
+                        totalTime: 'PT10M',
+                        estimatedCost: { '@type': 'MonetaryAmount', currency: 'INR', value: '0', name: 'Free Consultation' },
+                        step: [
+                            {
+                                '@type': 'HowToStep',
+                                name: 'Choose your service',
+                                text: `Select from ceiling cloth hangers, invisible grills, mosquito mesh, or shoe racks for your home in ${loc.name}.`,
+                                position: 1,
+                            },
+                            {
+                                '@type': 'HowToStep',
+                                name: 'Book a free measurement visit',
+                                text: 'Call +91-9390804146 or WhatsApp us. Our team arrives at your flat in Hyderabad within the same day or next day.',
+                                position: 2,
+                            },
+                            {
+                                '@type': 'HowToStep',
+                                name: 'On-site free measurement',
+                                text: 'Our uniformed technician visits, measures your balcony exactly, and shows you Jindal steel samples at no charge.',
+                                position: 3,
+                            },
+                            {
+                                '@type': 'HowToStep',
+                                name: 'Professional installation & warranty',
+                                text: 'We install within 4 hours, load-test the product, and hand you a 3–7 year official warranty card.',
+                                position: 4,
+                            },
+                        ],
+                    }),
+                }}
+            />
+
+            {/* 4. FAQPage — for FAQ rich snippets (if location has FAQs) */}
             {loc.faq && loc.faq.length > 0 && (
                 <script
                     type="application/ld+json"

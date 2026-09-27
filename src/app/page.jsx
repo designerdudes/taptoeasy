@@ -64,6 +64,102 @@ const GENERAL_FAQS = [
     },
 ];
 
+const REVIEWS_ROW_1 = [
+    {
+        name: 'Izhaar Ahmed',
+        area: 'Kohinoor by Auro Realty, Hitech City',
+        text: 'Excellent product and Simple Installation 👌',
+    },
+    {
+        name: 'Lata Shrinivas',
+        area: 'Jubilee Hills',
+        text: 'Nice quality product and good service. Satisfied',
+    },
+    {
+        name: 'Mohd Sam',
+        area: 'Kokapet',
+        text: 'Excellent work !! At Kokapet\nCustomer support is well explained in detailed\nInstallation done within 2hrs',
+    },
+    {
+        name: 'Rakesh Kumar',
+        area: 'Gachibowli',
+        text: 'Got invisible grills installed for my 14th-floor balcony. Very neat work by the team. Gives complete peace of mind with kids around.',
+    },
+    {
+        name: 'Sneha Reddy',
+        area: 'Manikonda',
+        text: 'Highly recommend Tap to Easy! I called them for a ceiling cloth hanger. They came on the same day for measurement and installed it the next day.',
+    },
+    {
+        name: 'Vikram Singh',
+        area: 'Tellapur',
+        text: 'Best service for mosquito mesh doors in Hyderabad. The quality of the mesh is excellent, and it slides very smoothly.',
+    },
+    {
+        name: 'Pooja Sharma',
+        area: 'Kondapur',
+        text: 'We got the UV braided cloth hanger installed. The team was professional, cleaned up after drilling, and the product is very sturdy.',
+    },
+    {
+        name: 'Ravi Teja',
+        area: 'Miyapur',
+        text: 'Fast and reliable. Got the shoe rack fixed outside my apartment. Fits perfectly and saves a lot of space.',
+    },
+];
+
+const REVIEWS_ROW_2 = [
+    {
+        name: 'Prasanthi Emani',
+        area: 'Kukatpally',
+        text: 'Excellent service by their team. We have opted for new cloth hangers and also rope change for old ones. Product is really good and also service is very professional and excellent.',
+    },
+    {
+        name: 'Yahya Alshami',
+        area: 'Banjara Hills',
+        text: 'Very good quality and very friendly way of attending customer.... on time delivery',
+    },
+    {
+        name: 'Kiran Mai',
+        area: 'Kukatpally',
+        text: 'They installed a ceiling hanger and pigeon net for our balcony. Very reasonable pricing and genuine Jindal steel used for the hangers.',
+    },
+    {
+        name: 'Anil Desai',
+        area: 'Nallagandla',
+        text: 'The invisible grills are truly invisible from a distance. The workers were polite and finished the entire 3BHK balcony in half a day.',
+    },
+    {
+        name: 'Swati M',
+        area: 'Banjara Hills',
+        text: 'Excellent quality ceiling hangers! I can easily dry heavy bedsheets now. The pulley system is very smooth compared to my old one.',
+    },
+    {
+        name: 'MD Farooq',
+        area: 'Financial District',
+        text: 'Installed sliding mosquito mesh for French windows. Perfect fit, no gaps. The auto-closing magnetic mesh is a lifesaver.',
+    },
+    {
+        name: 'Divya K',
+        area: 'Chandanagar',
+        text: 'Very transparent process. Free measurement, upfront pricing, and they even give a proper warranty card after the installation.',
+    },
+];
+
+const CLIENT_LOGOS = [
+    '/images/our client logos webp/Muppa_Projects_Logo (1).webp',
+    '/images/our client logos webp/Prestige_Grouplogo (2).webp',
+    '/images/our client logos webp/Vertex-About logo (1).webp',
+    '/images/our client logos webp/aditya logo (1).webp',
+    '/images/our client logos webp/apaarna logo (1).webp',
+    '/images/our client logos webp/jayabheri logo (1).webp',
+    '/images/our client logos webp/my home logo.webp',
+    '/images/our client logos webp/rajapushpa logo .webp',
+    '/images/our client logos webp/ramky logo (1).webp',
+    '/images/our client logos webp/sumadhura logo (1).webp',
+    '/images/our client logos webp/vamsiram-builders-logo (1).webp',
+    '/images/our client logos webp/vasavi group logo (1).webp',
+];
+
 export default function HomePage() {
     return (
         <div className="flex flex-col">
@@ -201,6 +297,28 @@ export default function HomePage() {
                     ))}
                 </div>
             </div>
+
+            {/* CLIENT LOGOS MARQUEE */}
+            <section className="border-b border-border bg-background py-12">
+                <div className="mx-auto w-full max-w-[90rem] px-4 sm:px-6">
+                    <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground mb-10">
+                        Trusted by top builders & gated communities
+                    </p>
+                    <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                        <div className="group flex w-max animate-marquee items-center gap-24 sm:gap-32 hover:[animation-play-state:paused]">
+                            {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, idx) => (
+                                <img
+                                    key={`logo-${idx}`}
+                                    src={logo}
+                                    alt="Client Logo"
+                                    className="h-16 sm:h-20 lg:h-24 w-auto max-w-[200px] sm:max-w-[280px] object-contain grayscale opacity-60 transition duration-300 group-hover:opacity-30 group-hover:blur-[2px] hover:!grayscale-0 hover:!opacity-100 hover:!blur-none hover:scale-105 cursor-pointer"
+                                    loading="lazy"
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* PRODUCTS SECTION */}
             <section id="products" className="scroll-mt-20 border-b border-border bg-secondary/40 py-16 lg:py-24">
@@ -407,7 +525,7 @@ export default function HomePage() {
                         <div className="text-center max-w-2xl mx-auto">
                             <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Testimonials</span>
                             <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl text-foreground">
-                                Real Reviews from Our Customers
+                                Google Reviews from Our Customers
                             </h2>
                             <p className="mt-3 text-sm text-muted-foreground">
                                 See what our customers say about our products, installation and service.
@@ -415,36 +533,12 @@ export default function HomePage() {
                         </div>
                     </Reveal>
 
-                    <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {[
-                            {
-                                name: 'Izhaar Ahmed',
-                                area: 'Kohinoor by Auro Realty, Hitech City',
-                                text: 'Excellent product and Simple Installation 👌',
-                            },
-                            {
-                                name: 'Lata Shrinivas',
-                                area: null,
-                                text: 'Nice quality product and good service. Satisfied',
-                            },
-                            {
-                                name: 'Mohd Sam',
-                                area: 'Kokapet',
-                                text: 'Excellent work !! At Kokapet\nCustomer support is well explained in detailed\nInstallation done within 2hrs',
-                            },
-                            {
-                                name: 'Prasanthi Emani',
-                                area: null,
-                                text: 'Excellent service by their team. We have opted for new cloth hangers and also rope change for old ones. Product is really good and also service is very professional and excellent.\nTook all our requirements and fixed them and also mainly their communication is appreciable.',
-                            },
-                            {
-                                name: 'Yahya Alshami',
-                                area: null,
-                                text: 'Very good quality and very friendly way of attending customer.... on time delivery',
-                            },
-                        ].map((rev, idx) => (
-                            <Reveal key={rev.name} delay={idx * 0.08}>
-                                <div className="flex h-full flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition duration-200">
+                    {/* Marquee Container */}
+                    <div className="mt-12 flex flex-col gap-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                        {/* ROW 1 */}
+                        <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
+                            {[...REVIEWS_ROW_1, ...REVIEWS_ROW_1].map((rev, idx) => (
+                                <div key={`row1-${idx}`} className="w-[320px] flex-none flex flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/30 transition duration-200">
                                     <div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex gap-1 text-amber-500">
@@ -452,7 +546,10 @@ export default function HomePage() {
                                                     <Star key={k} className="h-4 w-4 fill-amber-500" />
                                                 ))}
                                             </div>
-                                            <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">Google Review</span>
+                                            <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                <svg className="w-3 h-3 text-blue-500" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+                                                Google Review
+                                            </span>
                                         </div>
                                         <p className="mt-4 text-sm leading-relaxed text-foreground whitespace-pre-line">&ldquo;{rev.text}&rdquo;</p>
                                     </div>
@@ -464,8 +561,37 @@ export default function HomePage() {
                                         )}
                                     </div>
                                 </div>
-                            </Reveal>
-                        ))}
+                            ))}
+                        </div>
+
+                        {/* ROW 2 - Reverse Direction */}
+                        <div className="flex w-max animate-marquee gap-6 [animation-direction:reverse] hover:[animation-play-state:paused]">
+                            {[...REVIEWS_ROW_2, ...REVIEWS_ROW_2].map((rev, idx) => (
+                                <div key={`row2-${idx}`} className="w-[320px] flex-none flex flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-sm hover:border-primary/30 transition duration-200">
+                                    <div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex gap-1 text-amber-500">
+                                                {Array.from({ length: 5 }).map((_, k) => (
+                                                    <Star key={k} className="h-4 w-4 fill-amber-500" />
+                                                ))}
+                                            </div>
+                                            <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                <svg className="w-3 h-3 text-blue-500" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+                                                Google Review
+                                            </span>
+                                        </div>
+                                        <p className="mt-4 text-sm leading-relaxed text-foreground whitespace-pre-line">&ldquo;{rev.text}&rdquo;</p>
+                                    </div>
+
+                                    <div className="mt-6 border-t border-border pt-4">
+                                        <p className="text-sm font-bold text-foreground">{rev.name}</p>
+                                        {rev.area && (
+                                            <p className="text-xs text-muted-foreground mt-0.5">{rev.area}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>

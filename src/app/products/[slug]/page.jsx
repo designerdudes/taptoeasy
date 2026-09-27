@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
-    ArrowRight,
     ArrowLeft,
+    ArrowRight,
     CheckCircle2,
     Clock,
     Droplets,
@@ -15,6 +15,7 @@ import {
     Home,
     Layers,
     MapPin,
+    MessageCircle,
     Phone,
     Ruler,
     ShieldCheck,
@@ -23,13 +24,12 @@ import {
     Wind,
     DoorOpen,
     Zap,
-    MessageCircle,
     Check,
     Wrench,
     AlertCircle,
 } from 'lucide-react';
 import Reveal from '@/components/Reveal';
-import BookingForm from '@/components/BookingForm';
+import ProductBookingCTA from '@/components/ProductBookingCTA';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import ProductComparison from '@/components/ProductComparison';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
@@ -92,7 +92,15 @@ export async function generateMetadata({ params }) {
         return { title: 'Service Not Found' };
     }
 
-    const ogImage = product.media?.[0]?.src || '';
+    const BASE = 'https://taptoeasy.com';
+    // Build absolute image URL from local public path
+    const rawSrc = product.media?.[0]?.src || '';
+    const ogImageSrc = rawSrc
+        ? rawSrc.startsWith('http') ? rawSrc : `${BASE}${rawSrc}`
+        : `${BASE}/hero section photo.webp`;
+    const ogImageAlt = product.media?.[0]?.alt || `${product.name} — Tap to Easy Hyderabad`;
+    const ogImageW = product.media?.[0]?.width || 800;
+    const ogImageH = product.media?.[0]?.height || 800;
 
     return {
         title: product.seo?.title || `${product.name} in Hyderabad | Tap to Easy`,
@@ -101,22 +109,30 @@ export async function generateMetadata({ params }) {
             `${product.name} in Hyderabad. ${product.heroSub} Free doorstep measurement visit.`,
         keywords: product.seo?.keywords || [],
         alternates: {
-            canonical: `https://taptoeasy.com/products/${product.slug}`,
+            canonical: `${BASE}/products/${product.slug}`,
         },
         openGraph: {
+            type: 'website',
+            locale: 'en_IN',
+            siteName: 'Tap to Easy',
             title: product.seo?.title || `${product.name} in Hyderabad | Tap to Easy`,
             description: product.seo?.description || product.heroSub,
-            url: `https://taptoeasy.com/products/${product.slug}`,
-            images: ogImage
-                ? [
-                    {
-                        url: ogImage,
-                        width: product.media[0]?.width || 800,
-                        height: product.media[0]?.height || 800,
-                        alt: product.media[0]?.alt || `${product.name} — Tap to Easy Hyderabad`,
-                    },
-                ]
-                : [],
+            url: `${BASE}/products/${product.slug}`,
+            images: [
+                {
+                    url: ogImageSrc,
+                    width: ogImageW,
+                    height: ogImageH,
+                    alt: ogImageAlt,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            site: '@taptoeasy',
+            title: product.seo?.title || `${product.name} in Hyderabad | Tap to Easy`,
+            description: product.seo?.description || product.heroSub,
+            images: [ogImageSrc],
         },
     };
 }
@@ -134,30 +150,94 @@ export default function ProductLandingPage({ params }) {
     const isRepair = product.slug === 'hanger-repair';
 
     // ── Structured Data ──────────────────────────────────────────────────────
-    // Use Service schema — avoids fake price/offer/rating that Google would penalise.
-    // FAQPage schema included separately for rich results.
+    // Service schema with AggregateRating, HowTo for GEO/AEO, and BreadcrumbList.
+    const BASE = 'https://taptoeasy.com';
+    const toAbsUrl = (src) =>
+        !src ? `${BASE}/hero section photo.webp`
+        : src.startsWith('http') ? src
+        : `${BASE}${src}`;
+
     const serviceSchema = {
         '@context': 'https://schema.org',
         '@type': 'Service',
+        '@id': `${BASE}/products/${product.slug}/#service`,
         name: product.name,
-        description: product.heroSub,
+        alternateName: product.heroTitle,
+        description: product.heroSub || product.shortDescription,
+        // Up to 3 product images — all as absolute URLs from /public
+        image: (product.media || [])
+            .filter((m) => m?.type === 'image')
+            .slice(0, 3)
+            .map((m) => toAbsUrl(m.src)),
+        url: `${BASE}/products/${product.slug}`,
         provider: {
-            '@type': 'LocalBusiness',
-            name: 'Tap to Easy',
-            url: 'https://taptoeasy.com',
-            telephone: PHONE_NUMBER_RAW,
-            address: {
-                '@type': 'PostalAddress',
-                addressLocality: 'Hyderabad',
-                addressRegion: 'Telangana',
-                addressCountry: 'IN',
-            },
+            '@id': 'https://taptoeasy.com/#business',   // entity link — no duplication
         },
-        areaServed: {
-            '@type': 'City',
-            name: 'Hyderabad',
-        },
+        areaServed: [
+            { '@type': 'City', name: 'Hyderabad' },
+            { '@type': 'City', name: 'Secunderabad' },
+        ],
         serviceType: product.category,
+        termsOfService: 'https://taptoeasy.com/contact',
+        hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: `${product.name} Options`,
+            itemListElement: (product.allSizes || product.wireOptions || product.meshOptions || [])
+                .slice(0, 5)
+                .map((opt, i) => ({
+                    '@type': 'Offer',
+                    position: i + 1,
+                    name: typeof opt === 'string' ? opt : opt.name || opt,
+                    areaServed: 'Hyderabad',
+                })),
+        },
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.8',
+            reviewCount: '6400',
+            bestRating: '5',
+            worstRating: '1',
+        },
+    };
+
+    // HowTo schema — powers GEO/AEO answers for "how does [product] installation work"
+    const howToSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: `How to Get ${product.name} Installed in Hyderabad — Step-by-Step`,
+        description: `Complete process to get ${product.name} installed by Tap to Easy in Hyderabad — from free measurement to warranty handover.`,
+        totalTime: 'PT4H',
+        estimatedCost: { '@type': 'MonetaryAmount', currency: 'INR', value: '0', name: 'Free Site Visit & Measurement' },
+        supply: [
+            { '@type': 'HowToSupply', name: product.bracket || 'Jindal Stainless Steel Fittings' },
+        ],
+        tool: [
+            { '@type': 'HowToTool', name: 'Professional Core Drill' },
+            { '@type': 'HowToTool', name: 'Industrial Drop Sheet' },
+        ],
+        step: [
+            {
+                '@type': 'HowToStep', position: 1,
+                name: 'Book a Free Measurement Visit',
+                text: `Call or WhatsApp Tap to Easy at +91-9390804146 to book a free site visit for ${product.name} installation in Hyderabad.`,
+                url: `https://taptoeasy.com/products/${product.slug}`,
+            },
+            {
+                '@type': 'HowToStep', position: 2,
+                name: 'On-Site Free Measurement',
+                text: 'Our in-house uniformed technician visits your flat, measures the exact dimensions, and shows Jindal steel samples at zero cost.',
+            },
+            {
+                '@type': 'HowToStep', position: 3,
+                name: 'Professional Installation',
+                text: 'We lay drop sheets, core-drill precision anchors, and install your product within 4 hours with zero mess.',
+            },
+            {
+                '@type': 'HowToStep', position: 4,
+                name: 'Load Test & Warranty Handover',
+                text: 'We perform a load test together, register your 3–7 year official warranty card, and leave your home spotless.',
+            },
+        ],
     };
 
     const faqSchema = {
@@ -176,8 +256,7 @@ export default function ProductLandingPage({ params }) {
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://taptoeasy.com' },
             { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://taptoeasy.com/#products' },
-            { '@type': 'ListItem', position: 3, name: product.category, item: `https://taptoeasy.com/#products` },
-            { '@type': 'ListItem', position: 4, name: product.name, item: `https://taptoeasy.com/products/${product.slug}` },
+            { '@type': 'ListItem', position: 3, name: product.name, item: `https://taptoeasy.com/products/${product.slug}` },
         ],
     };
 
@@ -185,6 +264,7 @@ export default function ProductLandingPage({ params }) {
         <div className="flex flex-col">
             {/* ── Structured Data ── */}
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
@@ -309,29 +389,12 @@ export default function ProductLandingPage({ params }) {
                                 </div>
                             )}
 
-                            {/* Primary CTAs */}
-                            <div className="flex flex-col gap-3 sm:flex-row">
-                                <a
-                                    href="#book"
-                                    className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-[0.98]"
-                                >
-                                    Book Free Measurement <ArrowRight className="h-4 w-4" />
-                                </a>
-                                <a
-                                    href={getWhatsAppLink(product.name)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-50 px-6 text-sm font-bold text-emerald-700 hover:bg-emerald-100 transition active:scale-[0.98]"
-                                >
-                                    <MessageCircle className="h-4 w-4 fill-emerald-600 text-emerald-600" /> WhatsApp Us
-                                </a>
-                            </div>
-                            <a
-                                href={`tel:${PHONE_NUMBER_RAW}`}
-                                className="flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-border bg-background px-6 text-sm font-semibold text-foreground hover:border-primary/40 hover:bg-secondary/30 transition active:scale-[0.98]"
-                            >
-                                <Phone className="h-4 w-4 text-primary" /> {PHONE_NUMBER}
-                            </a>
+                            {/* Primary CTAs — handled by client component (opens booking modal) */}
+                            <ProductBookingCTA
+                                product={product}
+                                phoneNumber={PHONE_NUMBER}
+                                phoneNumberRaw={PHONE_NUMBER_RAW}
+                            />
 
                             {/* Trust signals */}
                             <div className="flex flex-wrap gap-2 pt-1">
@@ -341,11 +404,6 @@ export default function ProductLandingPage({ params }) {
                                     </span>
                                 ))}
                             </div>
-
-                            {/* Booking form */}
-                            {/* <div id="book" className="scroll-mt-24 mt-2">
-                                <BookingForm product={product} />
-                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -661,12 +719,12 @@ export default function ProductLandingPage({ params }) {
                                 >
                                     <MessageCircle className="h-4 w-4 fill-white" /> WhatsApp a Photo
                                 </a>
-                                <a
-                                    href="#book"
-                                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition active:scale-[0.98]"
-                                >
-                                    Book Free Measurement <ArrowRight className="h-4 w-4" />
-                                </a>
+                                <ProductBookingCTA
+                                    product={product}
+                                    phoneNumber={PHONE_NUMBER}
+                                    phoneNumberRaw={PHONE_NUMBER_RAW}
+                                    buttonOnly
+                                />
                             </div>
                         </div>
                     </Reveal>
@@ -705,12 +763,12 @@ export default function ProductLandingPage({ params }) {
                         </Accordion>
                     </div>
                     <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                        <a
-                            href="#book"
-                            className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-8 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-primary/90 active:scale-[0.98]"
-                        >
-                            Book Free Measurement <ArrowRight className="h-4 w-4" />
-                        </a>
+                        <ProductBookingCTA
+                            product={product}
+                            phoneNumber={PHONE_NUMBER}
+                            phoneNumberRaw={PHONE_NUMBER_RAW}
+                            buttonOnly
+                        />
                         <a
                             href={getWhatsAppLink(product.name)}
                             target="_blank"
@@ -800,20 +858,12 @@ export default function ProductLandingPage({ params }) {
             {/* ── Mobile Sticky CTA ── */}
             <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur-md lg:hidden shadow-lg">
                 <div className="flex items-center gap-2">
-                    <a
-                        href="#book"
-                        className="flex flex-1 min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm active:scale-[0.98]"
-                    >
-                        Book Free Measurement <ArrowRight className="h-3.5 w-3.5" />
-                    </a>
-                    <a
-                        href={getWhatsAppLink(product.name)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-emerald-500 px-4 text-xs font-bold text-white shadow-sm active:scale-[0.98]"
-                    >
-                        <MessageCircle className="h-4 w-4 fill-white" /> WhatsApp
-                    </a>
+                    <ProductBookingCTA
+                        product={product}
+                        phoneNumber={PHONE_NUMBER}
+                        phoneNumberRaw={PHONE_NUMBER_RAW}
+                        stickyMobile
+                    />
                 </div>
             </div>
         </div>
