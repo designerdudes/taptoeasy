@@ -19,11 +19,11 @@ const inter = Inter({
 export const metadata = {
     metadataBase: new URL('https://taptoeasy.com'),
     title: {
-        default: 'Tap to Easy | #1 Balcony Cloth Hangers & Invisible Grills in Hyderabad (Jindal Steel)',
+        default: 'Tap to Easy | Home Improvement Solutions in Hyderabad',
         template: '%s | Tap to Easy Hyderabad',
     },
     description:
-        'Best balcony cloth drying hangers (ceiling pulley & wall mounted) and invisible balcony safety grills in Hyderabad. Genuine Jindal Stainless Steel, 3–7 years warranty, 2-hour doorstep fitting, free site measurement visit across Hyderabad.',
+        'Tap to Easy provides home improvement solutions in Hyderabad including cloth hangers, invisible grills, shoe racks, mosquito mesh, pigeon nets and professional installation with reliable after-sales support.',
     keywords: [
         // Ceiling Cloth Hangers Keywords
         'balcony cloth hangers hyderabad',
@@ -100,9 +100,9 @@ export const metadata = {
         locale: 'en_IN',
         url: 'https://taptoeasy.com',
         siteName: 'Tap to Easy Balcony Installation Hyderabad',
-        title: 'Tap to Easy | Balcony Cloth Drying Hangers & Invisible Grills in Hyderabad',
+        title: 'Tap to Easy | Home Improvement Solutions in Hyderabad',
         description:
-            'Trained in-house crew installs Jindal Stainless Steel balcony cloth drying hangers, invisible safety grills, shoe racks & mosquito mesh doors across Hyderabad within 2 hours. Free doorstep measurement visit, 3–7 years warranty.',
+            'Tap to Easy provides professional home improvement installation in Hyderabad — cloth hangers, invisible grills, shoe racks, mosquito mesh and pigeon nets. Free doorstep measurement, 3–7 years warranty, reliable after-sales support.',
         images: [
             {
                 url: 'https://images.hostinger.com/a4242581-f71f-4f31-81d1-90612d1341dc.png',
@@ -114,9 +114,9 @@ export const metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Tap to Easy | Balcony Cloth Hangers & Invisible Grills in Hyderabad',
+        title: 'Tap to Easy | Home Improvement Solutions in Hyderabad',
         description:
-            'Jindal Stainless Steel balcony upgrades fitted in 2 hours across Hyderabad. Ceiling cloth hangers, invisible safety grills, shoe racks & mosquito mesh. Free measurement visit.',
+            'Tap to Easy provides home improvement solutions in Hyderabad — cloth hangers, invisible grills, shoe racks, mosquito mesh, pigeon nets, professional installation and reliable after-sales support.',
         images: ['https://images.hostinger.com/a4242581-f71f-4f31-81d1-90612d1341dc.png'],
     },
 };
@@ -193,7 +193,7 @@ export default function RootLayout({ children }) {
                             aggregateRating: {
                                 '@type': 'AggregateRating',
                                 ratingValue: '4.8',
-                                reviewCount: '16500',
+                                reviewCount: '6400',
                                 bestRating: '5',
                                 worstRating: '1',
                             },

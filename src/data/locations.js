@@ -5,7 +5,7 @@ export const LOCATIONS = [
         slug: 'gachibowli',
         name: 'Gachibowli',
         headline: 'Balcony Cloth Hangers & Invisible Grills in Gachibowli, Hyderabad',
-        subheadline: 'Fast 2-hour doorstep installation across all Gachibowli gated communities. Heavy-duty Jindal Stainless Steel rails, 3–7 years warranty, free measurement visit.',
+        subheadline: 'Fast doorstep installation across all Gachibowli gated communities. Heavy-duty Jindal Stainless Steel rails, 3–7 years warranty, free measurement visit.',
         communities: ['My Home Bhooja', 'Prestige High Fields', 'Rajapushpa Atria', 'PBEL City', 'Golf View Apartments'],
         popularServices: ['Ceiling Cloth Drying Hangers', 'Invisible Balcony Safety Grills', 'Magnetic Mosquito Mesh Doors'],
         deliveryTime: 'Within 90–120 Minutes',
@@ -45,10 +45,10 @@ export const LOCATIONS = [
         slug: 'kukatpally',
         name: 'Kukatpally',
         headline: 'Balcony Cloth Hangers, Invisible Grills & Mesh in Kukatpally, Hyderabad',
-        subheadline: 'Trusted by 3,500+ Kukatpally homes & KPHB colony apartments. Jindal Stainless Steel balcony hangers, invisible grills, and shoe racks fitted in 2 hours.',
+        subheadline: 'Trusted by 3,500+ Kukatpally homes & KPHB colony apartments. Jindal Stainless Steel balcony hangers, invisible grills, and shoe racks fitted within 4 hours.',
         communities: ['KPHB Phase 1-9', 'Lodha Bellezza', 'Incor One City', 'Vertex Prime', 'Raintree Park'],
         popularServices: ['Ceiling Pulley Cloth Hangers', 'Invisible Balcony Grills', 'Wall Shoe Racks'],
-        deliveryTime: 'Within 2 Hours',
+        deliveryTime: 'Within 4 Hours',
         metaDescription: 'Kukatpally & KPHB balcony cloth drying hangers, invisible grills & mosquito net doors. In-house crew, Jindal Stainless Steel, 3–7 yrs warranty. Call 90000 12345.',
         faq: [
             {
@@ -93,10 +93,10 @@ export const LOCATIONS = [
         slug: 'madhapur',
         name: 'Madhapur & Hitec City',
         headline: 'Balcony Cloth Hangers & Invisible Grills in Madhapur & Hitec City',
-        subheadline: 'Quick doorstep installation across Madhapur, Hitec City, and Cyberabad. Jindal Stainless Steel cloth drying systems, invisible grills & shoe racks in 2 hours.',
+        subheadline: 'Quick doorstep installation across Madhapur, Hitec City, and Cyberabad. Jindal Stainless Steel cloth drying systems, invisible grills & shoe racks within 4 hours.',
         communities: ['Fresh Living Apartments', 'DSR Fortune Prime', 'Meenakshi Sky Lounge', 'My Home Navadweepa'],
         popularServices: ['Balcony Cloth Drying Hangers', 'Invisible Grills', 'Wall-Mounted Shoe Racks'],
-        deliveryTime: 'Within 90 Minutes',
+        deliveryTime: 'Within 4 Hours',
         metaDescription: 'Balcony cloth hangers & invisible safety grills in Madhapur Hitec City Hyderabad. Free doorstep visit, Jindal Stainless Steel, 3–7 yrs warranty.',
         faq: [
             {
@@ -112,7 +112,7 @@ export const LOCATIONS = [
         subheadline: 'Same-day doorstep installation for cloth hangers, invisible safety grills, shoe racks & mosquito doors. Jindal Stainless Steel with 3–7 years warranty.',
         communities: ['Lanco Hills', 'Puppalguda Gated Villas', 'Secretariat Colony', 'Alkapur Township', 'Chitrapuri Colony'],
         popularServices: ['Balcony Cloth Hangers', 'Invisible Grills', 'Magnetic Mesh Doors'],
-        deliveryTime: 'Within 2 Hours',
+        deliveryTime: 'Within 4 Hours',
         metaDescription: 'Manikonda balcony cloth drying hangers, invisible safety grills & shoe racks. Free measurement visit, Jindal Stainless Steel, 3–7 years warranty.',
         faq: [
             {
@@ -144,7 +144,7 @@ export const LOCATIONS = [
         subheadline: 'Fast doorstep fitting in Chandanagar, Lingampally, and BHEL township. Jindal Stainless Steel cloth drying systems, shoe racks & mosquito doors.',
         communities: ['Aparna HillPark', 'Aparna Kanopy', 'Silpa Real Estate', 'PJR Enclave', 'Tara Nagar'],
         popularServices: ['Balcony Cloth Hangers', 'Mosquito Mesh Doors', 'Wall Shoe Racks'],
-        deliveryTime: 'Within 2 Hours',
+        deliveryTime: 'Within 4 Hours',
         metaDescription: 'Chandanagar balcony cloth drying hangers & invisible grills Hyderabad. Free measurement, Jindal Stainless Steel, 3–7 years warranty. Book online!',
         faq: [
             {
@@ -160,7 +160,7 @@ export const LOCATIONS = [
         subheadline: 'Serving Begumpet, Somajiguda, Secunderabad, and Marredpally. Premium Jindal Stainless Steel balcony hangers, shoe racks & invisible grills.',
         communities: ['Mayfair Apartments', 'Prakruthi Enclave', 'Padmarao Nagar Flats', 'Sindhi Colony', 'Sardar Patel Road'],
         popularServices: ['Ceiling Pulley Cloth Hangers', 'Wall-Mounted Shoe Racks', 'Invisible Grills'],
-        deliveryTime: 'Within 2 Hours',
+        deliveryTime: 'Within 4 Hours',
         metaDescription: 'Begumpet & Secunderabad balcony cloth drying hangers & invisible grills. Free measurement, Jindal Stainless Steel, 3–7 years warranty.',
         faq: [
             {
@@ -192,7 +192,7 @@ export const LOCATIONS = [
         subheadline: 'Doorstep measurement and installation across Nizampet Village, Bachupally, and Pragathi Nagar. Jindal Stainless Steel quality with 3–7 years warranty.',
         communities: ['Vertex Siris', 'Praneeth Pranav', 'SMR Vinay', 'Nizampet Road Apartments', 'Bollaram Road'],
         popularServices: ['Balcony Cloth Drying Hangers', 'Mosquito Mesh Doors', 'Invisible Grills'],
-        deliveryTime: 'Within 2 Hours',
+        deliveryTime: 'Within 4 Hours',
         metaDescription: 'Nizampet & Bachupally balcony cloth drying hangers & invisible grills Hyderabad. Free measurement, Jindal Stainless Steel, 3–7 years warranty.',
         faq: [
             {
