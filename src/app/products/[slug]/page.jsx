@@ -157,10 +157,10 @@ export default function ProductLandingPage({ params }) {
         : src.startsWith('http') ? src
         : `${BASE}${src}`;
 
-    const serviceSchema = {
+    const productSchema = {
         '@context': 'https://schema.org',
-        '@type': 'Service',
-        '@id': `${BASE}/products/${product.slug}/#service`,
+        '@type': 'Product',
+        '@id': `${BASE}/products/${product.slug}/#product`,
         name: product.name,
         alternateName: product.heroTitle,
         description: product.heroSub || product.shortDescription,
@@ -170,26 +170,19 @@ export default function ProductLandingPage({ params }) {
             .slice(0, 3)
             .map((m) => toAbsUrl(m.src)),
         url: `${BASE}/products/${product.slug}`,
-        provider: {
-            '@id': 'https://taptoeasy.com/#business',   // entity link — no duplication
+        brand: {
+            '@type': 'Brand',
+            name: 'Tap to Easy',
         },
-        areaServed: [
-            { '@type': 'City', name: 'Hyderabad' },
-            { '@type': 'City', name: 'Secunderabad' },
-        ],
-        serviceType: product.category,
-        termsOfService: 'https://taptoeasy.com/contact',
-        hasOfferCatalog: {
-            '@type': 'OfferCatalog',
-            name: `${product.name} Options`,
-            itemListElement: (product.allSizes || product.wireOptions || product.meshOptions || [])
-                .slice(0, 5)
-                .map((opt, i) => ({
-                    '@type': 'Offer',
-                    position: i + 1,
-                    name: typeof opt === 'string' ? opt : opt.name || opt,
-                    areaServed: 'Hyderabad',
-                })),
+        offers: {
+            '@type': 'AggregateOffer',
+            offerCount: Math.max(1, (product.allSizes || product.wireOptions || product.meshOptions || []).length),
+            priceCurrency: 'INR',
+            lowPrice: '1200',
+            availability: 'https://schema.org/InStock',
+            seller: {
+                '@id': 'https://taptoeasy.com/#business',
+            },
         },
         aggregateRating: {
             '@type': 'AggregateRating',
@@ -263,7 +256,7 @@ export default function ProductLandingPage({ params }) {
     return (
         <div className="flex flex-col">
             {/* ── Structured Data ── */}
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
